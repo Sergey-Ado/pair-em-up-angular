@@ -6,7 +6,6 @@ import { TimeFormatPipePipe } from '../../../pipes/time-format-pipe-pipe';
   selector: 'app-time-score',
   imports: [TimeFormatPipePipe],
   templateUrl: './time-score.html',
-  styleUrl: './time-score.css',
 })
 export class TimeScore {
   protected store = inject(Store);

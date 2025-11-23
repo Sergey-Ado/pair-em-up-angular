@@ -6,7 +6,7 @@ import { Store } from '../../store/store';
   providedIn: 'root',
 })
 export class GameService {
-  private mode = Modes.CLASSIC;
+  public mode = Modes.CLASSIC;
   private readonly store = inject(Store);
   private timerIncrement = 0;
 

@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 1rem 1rem 0;
+}
+
+.start-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+
+  min-height: calc(100vh - 64px);
+}
+
+.game-page {
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+
+  min-height: calc(100vh - 64px);
+}

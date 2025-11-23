@@ -5,7 +5,7 @@
   gap: 1rem;
 }
 
-.control-tools button {
+.control-button {
   width: 270px;
 }
 
@@ -16,8 +16,7 @@
 }
 
 @media (width <= 768px) {
-  .control-tools,
-  .control-tools button {
+  .control-button {
     width: 200px;
   }
 }

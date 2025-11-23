@@ -1,17 +1,8 @@
-.header {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: flex-end;
-
-  padding: 1rem 1rem 0;
-}
-
-.header .button-container {
+.header-button-container {
   display: flex;
   gap: 1rem;
 }
 
-.header .space {
+.header-space {
   flex-grow: 1;
 }
