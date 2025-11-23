@@ -8,7 +8,6 @@ import { GamePage } from './components/game-page/game-page';
   selector: 'app-root',
   templateUrl: './app.html',
   imports: [StartPage, Header, GamePage],
-  providers: [Store],
 })
 export class App {
   readonly store = inject(Store);

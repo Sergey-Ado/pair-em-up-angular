@@ -1,0 +1,9 @@
+.timer-score {
+  display: flex;
+  gap: 1rem;
+}
+
+.timer-score span {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+}

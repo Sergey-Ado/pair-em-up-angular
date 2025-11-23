@@ -1,5 +1,5 @@
-import { Component, output } from '@angular/core';
-import { Constants, Pages } from '../../constants';
+import { Component } from '@angular/core';
+import { Constants } from '../../constants';
 import { ModeSelection } from './mode-selection/mode-selection';
 
 @Component({
@@ -10,9 +10,4 @@ import { ModeSelection } from './mode-selection/mode-selection';
 })
 export class StartPage {
   github = Constants.GITHUB;
-  setPageIndex = output<Pages>();
-
-  setIndex() {
-    this.setPageIndex.emit(Pages.GAME);
-  }
 }

@@ -16,5 +16,6 @@ export class ModeSelection {
   protected startClassic(): void {
     this.gameService.setMode(Modes.CLASSIC);
     this.store.setPageIndex(Pages.GAME);
+    this.gameService.newGame(Modes.CLASSIC);
   }
 }
