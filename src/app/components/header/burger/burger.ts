@@ -11,7 +11,7 @@ export class Burger {
   protected isOpen = signal(false);
   protected isEnabled = signal(false);
 
-  private constructor() {
+  public constructor() {
     window.addEventListener('resize', () => {
       if (this.isOpen() && document.documentElement.clientWidth > 705) {
         this.close();
