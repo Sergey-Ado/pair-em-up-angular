@@ -8,5 +8,5 @@ import { Store } from '../../../../store/store';
   styleUrl: './time-score.css',
 })
 export class TimeScore {
-  store = inject(Store);
+  protected store = inject(Store);
 }

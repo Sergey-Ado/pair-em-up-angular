@@ -14,7 +14,6 @@ export class ModeSelection {
   private gameService = inject(GameService);
 
   protected startClassic(): void {
-    this.gameService.setMode(Modes.CLASSIC);
     this.store.setPageIndex(Pages.GAME);
     this.gameService.newGame(Modes.CLASSIC);
   }

@@ -9,5 +9,5 @@ import { ModeSelection } from './mode-selection/mode-selection';
   styleUrl: './start-page.css',
 })
 export class StartPage {
-  github = Constants.GITHUB;
+  protected github = Constants.GITHUB;
 }

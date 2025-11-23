@@ -10,5 +10,5 @@ import { GamePage } from './components/game-page/game-page';
   imports: [StartPage, Header, GamePage],
 })
 export class App {
-  readonly store = inject(Store);
+  protected readonly store = inject(Store);
 }

@@ -11,7 +11,7 @@ export class Burger {
   protected isOpen = signal(false);
   protected isEnabled = signal(false);
 
-  constructor() {
+  private constructor() {
     window.addEventListener('resize', () => {
       if (this.isOpen() && document.documentElement.clientWidth > 705) {
         this.close();
@@ -19,23 +19,23 @@ export class Burger {
     });
   }
 
-  private open() {
+  private open(): void {
     this.isOpen.set(true);
   }
 
-  private close() {
+  private close(): void {
     this.isOpen.set(false);
   }
 
-  private enabled() {
+  private enabled(): void {
     this.isEnabled.set(true);
   }
 
-  private disabled() {
+  private disabled(): void {
     this.isEnabled.set(false);
   }
 
-  protected toggleBurger() {
+  protected toggleBurger(): void {
     if (this.isOpen()) {
       this.close();
     } else {
