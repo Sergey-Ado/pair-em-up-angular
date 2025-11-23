@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '../../../../store/store';
-import { Pages } from '../../../constants';
+import { Modes, Pages } from '../../../constants';
+import { GameService } from '../../../services/game-service';
 
 @Component({
   selector: 'app-mode-selection',
@@ -10,8 +11,10 @@ import { Pages } from '../../../constants';
 })
 export class ModeSelection {
   private store = inject(Store);
+  private gameService = inject(GameService);
 
   protected startClassic(): void {
+    this.gameService.setMode(Modes.CLASSIC);
     this.store.setPageIndex(Pages.GAME);
   }
 }
