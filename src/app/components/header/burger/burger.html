@@ -1,0 +1,11 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<div
+  [ngClass]="isEnabled() ? 'burger-cross enabled' : 'burger-cross'"
+  (click)="toggleBurger()"
+>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+<div [ngClass]="isOpen() ? 'burger-panel open' : 'burger-panel'"></div>

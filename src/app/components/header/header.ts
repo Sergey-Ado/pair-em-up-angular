@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Burger } from './burger/burger';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [Burger],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
