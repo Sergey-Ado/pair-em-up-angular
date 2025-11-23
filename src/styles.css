@@ -1,1 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: Atomic-SC;
+  font-weight: 400;
+  src: url("./assets/fonts/Amatic-SC/AmaticSC-Regular.ttf");
+}
+
+@font-face {
+  font-family: Atomic-SC;
+  font-weight: 700;
+  src: url("./assets/fonts/Amatic-SC/AmaticSC-Bold.ttf");
+}
+
+@font-face {
+  font-family: Rubik;
+  font-weight: 400;
+  src: url("./assets/fonts/Rubik/Rubik-Regular.ttf");
+}
+
+@font-face {
+  font-family: Rubik;
+  font-weight: 700;
+  src: url("./assets/fonts/Rubik/Rubik-Bold.ttf");
+}
+
+:root {
+  --color-base-light: rgb(255 255 255);
+  --color-base-dark: rgb(0 0 0 / 50%);
+  --color-button-hover-light: rgb(211 211 211);
+  --color-button-hover-dark: rgb(105 105 105 / 50%);
+  --color-cell-dark: rgb(0 0 0);
+  --color-border-cell-dark: rgb(54 54 54);
+  --color-cell-active: rgb(0 128 0);
+  --color-cell-error: rgb(255 0 0);
+  --color-cell-hint: rgb(255 255 0);
+  --color-cell-hover: rgb(2 219 0);
+  --transition: 0.3s;
+}
+
+body {
+  /* eslint-disable-next-line css/use-baseline */
+  user-select: none;
+
+  margin: 0;
+
+  font-family: Rubik, sans-serif;
+
+  background-image: url("./assets/images/background-light.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+}
+
+body.dark {
+  color: var(--color-base-light);
+  background-image: url("./assets/images/background-dark.jpg");
+}
+
+button {
+  cursor: pointer;
+
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+
+  font-size: 1.5rem;
+  text-transform: capitalize;
+
+  background-color: var(--color-base-light);
+
+  transition: var(--transition);
+}
+
+body.dark button {
+  border: solid 2px var(--color-base-light);
+  color: var(--color-base-light);
+  background-color: rgb(0 0 0 / 50%);
+}
+
+@media (hover: hover) {
+  button:hover {
+    background-color: var(--color-button-hover-light);
+  }
+
+  body.dark button:hover {
+    background-color: var(--color-button-hover-dark);
+  }
+}
+
+@media (width <= 768px) {
+  button {
+    font-size: 1rem;
+  }
+}
