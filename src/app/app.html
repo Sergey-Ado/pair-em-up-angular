@@ -1,2 +1,10 @@
 <app-header />
-<app-start-page />
+
+@switch (store.pageIndex()) {
+  @case ("start") {
+    <app-start-page />
+  }
+  @case ("game") {
+    <app-game-page />
+  }
+}

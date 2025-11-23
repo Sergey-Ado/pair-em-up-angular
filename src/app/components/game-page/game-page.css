@@ -1,0 +1,36 @@
+.game-page {
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+
+  min-height: calc(100vh - 64px);
+}
+
+.game-container {
+  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  gap: 4rem 1rem;
+}
+
+@media (width <= 1060px) {
+  .game-container {
+    grid-template-columns: repeat(2, min-content);
+    grid-template-rows: min-content 1fr;
+  }
+}
+
+@media (width <= 768px) {
+  .game-container {
+    grid-template-columns: repeat(2, min-content);
+    grid-template-rows: min-content 1fr;
+  }
+}
+
+@media (width <= 705px) {
+  .game-container {
+    display: block;
+  }
+}
