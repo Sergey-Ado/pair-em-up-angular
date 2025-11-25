@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Store } from '../../../../store/store';
 
 @Component({
   selector: 'app-assist-tools',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './assist-tools.html',
   styleUrl: './assist-tools.css',
 })
-export class AssistTools {}
+export class AssistTools {
+  protected store = inject(Store);
+}

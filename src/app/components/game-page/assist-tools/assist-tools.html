@@ -1,4 +1,6 @@
-<button type="button" class="assist-button">hint</button>
+<button type="button" class="assist-button">
+  hints: {{ store.hints() > 5 ? "5+" : store.hints() }}
+</button>
 <button type="button" class="assist-button">revert</button>
 <button type="button" class="assist-button">add numbers</button>
 <button type="button" class="assist-button">shuffle</button>
