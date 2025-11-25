@@ -1,0 +1,28 @@
+.border-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+
+  font-weight: 700;
+
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-base-light);
+  background-color: lightgray;
+}
+
+.border-cell.dark {
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-border-cell-dark);
+}
+
+@media (width <= 470px) {
+  .game-cell {
+    width: 30px;
+    height: 30px;
+  }
+}

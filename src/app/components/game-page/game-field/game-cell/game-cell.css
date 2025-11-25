@@ -1,0 +1,29 @@
+.game-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-base-light);
+
+  transition: 0.3s;
+}
+
+@media (width <= 470px) {
+  .game-cell {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (hover: hover) {
+  .game-cell.can-hover:hover {
+    /* eslint-disable-next-line css/no-invalid-properties */
+    border: solid 2px var(--color-cell-hover);
+  }
+}

@@ -1,1 +1,6 @@
-<div class="game-field">game-field</div>
+@for (row of store.cells(); track $index; let rowIndex = $index) {
+  <app-border-cell row="{{ rowIndex }}" />
+  @for (cell of row; track $index; let colIndex = $index) {
+    <app-game-cell value="{{ cell }}" />
+  }
+}
