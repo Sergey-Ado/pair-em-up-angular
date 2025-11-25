@@ -14,6 +14,16 @@
   transition: 0.3s;
 }
 
+.game-cell.active {
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-cell-active);
+}
+
+.game-cell.error {
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-cell-error);
+}
+
 @media (width <= 470px) {
   .game-cell {
     width: 30px;

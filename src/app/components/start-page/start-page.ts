@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Constants } from '../../constants';
+import { Constants } from '../../types/constants';
 import { ModeSelection } from './mode-selection/mode-selection';
 
 @Component({

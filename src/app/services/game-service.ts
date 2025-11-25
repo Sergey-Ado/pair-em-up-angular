@@ -1,14 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { Modes } from '../constants';
+import { Constants, Modes } from '../types/constants';
 import { Store } from '../../store/store';
-
-interface IHintCell {
-  i: number;
-  j: number;
-  value: number;
-}
-
-type IHintPair = [IHintCell, IHintCell];
+import { ICell, IHintPair } from '../types/game-types';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +16,10 @@ export class GameService {
   private play = false;
   private moves = 0;
   private hints: IHintPair[] = [];
+  private canClick = true;
+  private firstCell: ICell | null = null;
+  private secondCell: ICell | null = null;
+  private eraserMode = false;
 
   private startTimer(time = 0): void {
     this.store.setTime(time);
@@ -41,17 +38,19 @@ export class GameService {
     this.createNewCells();
 
     this.createFirstCells();
-
-    const countRow = Math.ceil(this.nextIndex / 9);
-    const cells = this.cells.slice(0, countRow);
-    this.store.setCells(cells);
-    console.log(cells);
+    this.updateStoreCells();
 
     this.clearCounters();
     this.calculateHints();
     this.play = true;
     // globalStore.sound.start();
     // globalStore.sound.startBackground();
+  }
+
+  private updateStoreCells(): void {
+    const countRow = Math.ceil(this.nextIndex / 9);
+    const cells = this.cells.slice(0, countRow);
+    this.store.setCells(cells);
   }
 
   private createNewCells(): void {
@@ -104,7 +103,7 @@ export class GameService {
     const horizontal = this.cells
       .flat()
       .map((item, index) => {
-        return { i: Math.floor(index / 9), j: index % 9, value: item };
+        return { row: Math.floor(index / 9), col: index % 9, value: item };
       })
       .filter((item) => item.value);
     for (let i = 0; i < horizontal.length - 1; i++) {
@@ -115,11 +114,11 @@ export class GameService {
       if (pairValue) this.hints.push([horizontal[i], horizontal[i + 1]]);
     }
 
-    for (let j = 0; j < 9; j++) {
+    for (let col = 0; col < 9; col++) {
       const vertical = [];
-      for (let i = 0; i < 50; i++) {
-        if (this.cells[i][j]) {
-          vertical.push({ i, j, value: this.cells[i][j] });
+      for (let row = 0; row < 50; row++) {
+        if (this.cells[row][col]) {
+          vertical.push({ row, col, value: this.cells[row][col] });
         }
       }
       for (let i = 0; i < vertical.length - 1; i++) {
@@ -138,5 +137,136 @@ export class GameService {
     if (firstValue + secondValue === 10) return 2;
     if (firstValue === secondValue) return 1;
     return 0;
+  }
+
+  private pairCellValue(firstCell: ICell, secondCell: ICell): number {
+    const firstValue = this.cells[firstCell.row][firstCell.col];
+    const secondValue = this.cells[secondCell.row][secondCell.col];
+    return this.pairValue(firstValue, secondValue);
+  }
+
+  public getCellSignal(cell: ICell): void {
+    if (!this.canClick) return;
+
+    if (this.firstCell === null) {
+      if (this.eraserMode) {
+        // this.endEraserMode();
+        this.canClick = false;
+        this.firstCell = cell;
+        this.store.setFirstCell(cell);
+        setTimeout(() => {
+          this.canClick = true;
+          // this.eraser();
+        }, Constants.REMOVE_DELAY);
+        return;
+      } else {
+        this.firstCell = cell;
+        this.store.setFirstCell(cell);
+        // globalStore.sound.select();
+        return;
+      }
+    }
+
+    if (this.firstCell === cell) {
+      this.firstCell = null;
+      this.store.setFirstCell(null);
+      // globalStore.sound.unselect();
+      return;
+    }
+
+    this.secondCell = cell;
+
+    const pairValue = this.pairCellValue(this.firstCell, this.secondCell);
+    if (pairValue && (this.isHorizontal() || this.isVertical())) {
+      this.store.setScore(this.store.score() + pairValue);
+      this.store.setReverts(1);
+      this.moves++;
+      this.removePair();
+    } else {
+      this.cancelPair();
+    }
+  }
+
+  private isVertical(): boolean {
+    if (!(this.firstCell && this.secondCell)) return false;
+    const col = this.firstCell.col;
+    if (col !== this.secondCell.col) return false;
+    const dRow = this.secondCell.row > this.firstCell.row ? 1 : -1;
+    let row = this.firstCell.row + dRow;
+    while (this.cells[row][col] === 0) {
+      row += dRow;
+    }
+    return row === this.secondCell.row;
+  }
+
+  private isHorizontal(): boolean {
+    if (!(this.firstCell && this.secondCell)) return false;
+    const dCol =
+      (this.firstCell.row === this.secondCell.row &&
+        this.firstCell.col < this.secondCell.col) ||
+      this.firstCell.row < this.secondCell.row
+        ? 1
+        : -1;
+    let row = this.firstCell.row;
+    let col = this.firstCell.col + dCol;
+    if (col < 0) {
+      row--;
+      col = 8;
+    }
+    if (col > 8) {
+      row++;
+      col = 0;
+    }
+    while (this.cells[row][col] === 0) {
+      col += dCol;
+      if (col < 0) {
+        row--;
+        col = 8;
+      }
+      if (col > 8) {
+        row++;
+        col = 0;
+      }
+    }
+    return row === this.secondCell.row && col === this.secondCell.col;
+  }
+
+  private removePair(): void {
+    if (!(this.firstCell && this.secondCell)) return;
+    this.canClick = false;
+    this.store.setSecondCell(this.secondCell);
+    // globalStore.sound.remove();
+    const removeDelay = setTimeout(() => {
+      if (!(this.firstCell && this.secondCell)) return;
+      // this.saveOldCells();
+      this.cells[this.firstCell.row][this.firstCell.col] = 0;
+      this.cells[this.secondCell.row][this.secondCell.col] = 0;
+      this.store.setFirstCell(null);
+      this.store.setSecondCell(null);
+      this.updateStoreCells();
+      this.firstCell = null;
+      this.secondCell = null;
+      clearTimeout(removeDelay);
+      this.canClick = true;
+      this.calculateHints();
+      // this.updateCounters();
+      // this.canMove();
+    }, Constants.REMOVE_DELAY);
+  }
+
+  private cancelPair(): void {
+    if (!(this.firstCell && this.secondCell)) return;
+    this.canClick = false;
+    this.store.setErrorCell(this.secondCell);
+    const errorDelay = setTimeout(() => {
+      if (!(this.firstCell && this.secondCell)) return;
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+      this.store.setErrorCell(null);
+      this.secondCell = null;
+      clearTimeout(errorDelay);
+      this.canClick = true;
+    }, Constants.REMOVE_DELAY);
+    // globalStore.sound.error();
   }
 }
