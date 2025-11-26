@@ -26,7 +26,7 @@ const initialState: IState = {
   hints: 0,
   reverts: 0,
   adds: 10,
-  shuffles: 0,
+  shuffles: 5,
   erasers: 0,
   cells: [],
   canHover: true,

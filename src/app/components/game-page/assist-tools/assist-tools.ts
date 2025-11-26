@@ -15,4 +15,8 @@ export class AssistTools {
   protected add(): void {
     this.gameService.addNumbers();
   }
+
+  protected shuffle(): void {
+    this.gameService.shuffle();
+  }
 }

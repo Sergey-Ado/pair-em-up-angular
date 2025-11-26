@@ -303,7 +303,39 @@ export class GameService {
       this.firstCell = null;
     }
     this.calculateHints();
+    // this.canMove();
+  }
+
+  public shuffle(): void {
+    // globalStore.burger.close();
+    // this.endEraserMode();
+    const numbers = this.cells
+      .map((line, i) =>
+        line.map((value, j) => {
+          return { i, j, value };
+        }),
+      )
+      .flat()
+      .filter((item) => item.value);
+
+    const newValue = numbers
+      .map((item) => item.value)
+      .sort(() => Math.random() - 0.5);
+    numbers.forEach(
+      (item, index) => (this.cells[item.i][item.j] = newValue[index]),
+    );
+
+    this.store.setShuffles(this.store.shuffles() - 1);
+    this.store.setReverts(0);
+    this.calculateHints();
     // this.updateCounters();
+    if (this.firstCell) {
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+    }
+
+    this.updateStoreCells();
+    // globalStore.sound.assist();
     // this.canMove();
   }
 }
