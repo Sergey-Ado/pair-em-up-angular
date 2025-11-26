@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '../../../../store/store';
 import { GameService } from '../../../services/game-service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-assist-tools',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './assist-tools.html',
   styleUrl: './assist-tools.css',
 })
@@ -18,5 +19,9 @@ export class AssistTools {
 
   protected shuffle(): void {
     this.gameService.shuffle();
+  }
+
+  protected eraser(): void {
+    this.gameService.eraser();
   }
 }

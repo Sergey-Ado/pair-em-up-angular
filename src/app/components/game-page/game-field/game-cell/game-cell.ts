@@ -46,6 +46,7 @@ export class GameCell implements OnInit {
   }
 
   protected click(): void {
+    if (this.cell.value === 0) return;
     this.gameService.getCellSignal(this.cell);
   }
 }

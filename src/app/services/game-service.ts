@@ -153,13 +153,13 @@ export class GameService {
 
     if (this.firstCell === null) {
       if (this.eraserMode) {
-        // this.endEraserMode();
+        this.endEraserMode();
         this.canClick = false;
         this.firstCell = cell;
         this.store.setFirstCell(cell);
         setTimeout(() => {
           this.canClick = true;
-          // this.eraser();
+          this.eraser();
         }, Constants.REMOVE_DELAY);
         return;
       } else {
@@ -244,6 +244,8 @@ export class GameService {
       // this.saveOldCells();
       this.cells[this.firstCell.row][this.firstCell.col] = 0;
       this.cells[this.secondCell.row][this.secondCell.col] = 0;
+      this.firstCell.value = 0;
+      this.secondCell.value = 0;
       this.store.setFirstCell(null);
       this.store.setSecondCell(null);
       this.updateStoreCells();
@@ -252,7 +254,6 @@ export class GameService {
       clearTimeout(removeDelay);
       this.canClick = true;
       this.calculateHints();
-      // this.updateCounters();
       // this.canMove();
     }, Constants.REMOVE_DELAY);
   }
@@ -275,7 +276,7 @@ export class GameService {
 
   public addNumbers(): void {
     // globalStore.burger.close();
-    // this.endEraserMode();
+    this.endEraserMode();
     let numbers = this.cells.flat().filter((s) => s);
     if (this.mode === 'random') {
       numbers.sort(() => Math.random() - 0.5);
@@ -294,7 +295,6 @@ export class GameService {
     }
 
     this.updateStoreCells();
-    // globalStore.gameField.showValues(this.cells, this.nextIndex);
 
     this.store.setReverts(0);
     this.store.setAdds(this.store.adds() - 1);
@@ -308,7 +308,7 @@ export class GameService {
 
   public shuffle(): void {
     // globalStore.burger.close();
-    // this.endEraserMode();
+    this.endEraserMode();
     const numbers = this.cells
       .map((line, i) =>
         line.map((value, j) => {
@@ -337,5 +337,33 @@ export class GameService {
     this.updateStoreCells();
     // globalStore.sound.assist();
     // this.canMove();
+  }
+
+  public eraser(): void {
+    // globalStore.burger.close();
+    if (this.firstCell) {
+      this.cells[this.firstCell.row][this.firstCell.col] = 0;
+      this.firstCell.value = 0;
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+      this.store.setErasers(this.store.erasers() - 1);
+      this.store.setReverts(0);
+      this.calculateHints();
+      this.updateStoreCells();
+      // globalStore.sound.assist();
+      // this.canMove();
+    } else {
+      if (this.eraserMode) {
+        this.endEraserMode();
+      } else {
+        this.eraserMode = true;
+        this.store.setEraserMode(true);
+      }
+    }
+  }
+
+  private endEraserMode(): void {
+    this.eraserMode = false;
+    this.store.setEraserMode(false);
   }
 }

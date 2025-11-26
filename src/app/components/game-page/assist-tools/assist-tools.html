@@ -18,4 +18,11 @@
 >
   shuffle: {{ store.shuffles() }} / 5
 </button>
-<button type="button" class="assist-button">eraser</button>
+<button
+  type="button"
+  [ngClass]="['assist-button', store.eraserMode() ? 'eraser-mode' : '']"
+  (click)="eraser()"
+  [disabled]="store.erasers() === 0"
+>
+  eraser: {{ store.erasers() }} / 5
+</button>

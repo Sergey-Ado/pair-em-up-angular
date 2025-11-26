@@ -17,6 +17,7 @@ interface IState {
   secondCell: TSelectCell;
   errorCell: TSelectCell;
   background: string;
+  eraserMode: boolean;
 }
 
 const initialState: IState = {
@@ -27,13 +28,14 @@ const initialState: IState = {
   reverts: 0,
   adds: 10,
   shuffles: 5,
-  erasers: 0,
+  erasers: 5,
   cells: [],
   canHover: true,
   firstCell: null,
   secondCell: null,
   errorCell: null,
   background: '',
+  eraserMode: false,
 };
 
 export const Store = signalStore(
@@ -78,6 +80,9 @@ export const Store = signalStore(
     },
     setErrorCell(errorCell: TSelectCell): void {
       patchState(store, { errorCell });
+    },
+    setEraserMode(eraserMode: boolean): void {
+      patchState(store, { eraserMode });
     },
     setBackground(background: string): void {
       patchState(store, { background });
