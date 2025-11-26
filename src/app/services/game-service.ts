@@ -21,6 +21,8 @@ export class GameService {
   private canClick = true;
   private firstCell: ICell | null = null;
   private secondCell: ICell | null = null;
+  private oldFirstCell: ICell | null = null;
+  private oldSecondCell: ICell | null = null;
   private eraserMode = false;
 
   private startTimer(time = 0): void {
@@ -241,11 +243,9 @@ export class GameService {
     this.soundService.remove();
     const removeDelay = setTimeout(() => {
       if (!(this.firstCell && this.secondCell)) return;
-      // this.saveOldCells();
+      this.saveOldCells();
       this.cells[this.firstCell.row][this.firstCell.col] = 0;
       this.cells[this.secondCell.row][this.secondCell.col] = 0;
-      this.firstCell.value = 0;
-      this.secondCell.value = 0;
       this.store.setFirstCell(null);
       this.store.setSecondCell(null);
       this.updateStoreCells();
@@ -285,7 +285,7 @@ export class GameService {
       numbers = numbers.map(() => Math.floor(9 * Math.random()) + 1);
     }
 
-    // globalStore.sound.assist();
+    this.soundService.assist();
     for (let i = 0; i < numbers.length; i++) {
       if (this.nextIndex > 449 && i < numbers.length - 1) {
         // this.gameOver(1);
@@ -328,14 +328,14 @@ export class GameService {
     this.store.setShuffles(this.store.shuffles() - 1);
     this.store.setReverts(0);
     this.calculateHints();
-    // this.updateCounters();
+
     if (this.firstCell) {
       this.store.setFirstCell(null);
       this.firstCell = null;
     }
 
     this.updateStoreCells();
-    // globalStore.sound.assist();
+    this.soundService.assist();
     // this.canMove();
   }
 
@@ -343,14 +343,13 @@ export class GameService {
     // globalStore.burger.close();
     if (this.firstCell) {
       this.cells[this.firstCell.row][this.firstCell.col] = 0;
-      this.firstCell.value = 0;
       this.store.setFirstCell(null);
       this.firstCell = null;
       this.store.setErasers(this.store.erasers() - 1);
       this.store.setReverts(0);
       this.calculateHints();
       this.updateStoreCells();
-      // globalStore.sound.assist();
+      this.soundService.assist();
       // this.canMove();
     } else {
       if (this.eraserMode) {
@@ -365,5 +364,36 @@ export class GameService {
   private endEraserMode(): void {
     this.eraserMode = false;
     this.store.setEraserMode(false);
+  }
+
+  public revert(): void {
+    this.endEraserMode();
+    // globalStore.burger.close();
+    if (this.firstCell) {
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+    }
+    if (this.oldFirstCell && this.oldSecondCell) {
+      console.log(this.oldFirstCell, this.oldSecondCell);
+      this.cells[this.oldFirstCell!.row][this.oldFirstCell.col] =
+        this.oldFirstCell.value;
+      this.cells[this.oldSecondCell.row][this.oldSecondCell.col] =
+        this.oldSecondCell.value;
+      this.updateStoreCells();
+
+      const delta = this.pairCellValue(this.oldFirstCell, this.oldSecondCell);
+      this.store.setScore(this.store.score() - delta);
+      this.store.setReverts(0);
+      this.moves--;
+      this.calculateHints();
+      this.soundService.assist();
+    }
+  }
+
+  private saveOldCells(): void {
+    if (this.firstCell && this.secondCell) {
+      this.oldFirstCell = { ...this.firstCell };
+      this.oldSecondCell = { ...this.secondCell };
+    }
   }
 }

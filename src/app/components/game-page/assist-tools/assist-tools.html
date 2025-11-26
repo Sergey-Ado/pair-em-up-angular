@@ -1,7 +1,14 @@
 <button type="button" class="assist-button">
   hints: {{ store.hints() > 5 ? "5+" : store.hints() }}
 </button>
-<button type="button" class="assist-button">revert</button>
+<button
+  type="button"
+  class="assist-button"
+  (click)="revert()"
+  [disabled]="store.reverts() === 0"
+>
+  revert: {{ store.reverts() }} / 1
+</button>
 <button
   type="button"
   class="assist-button"

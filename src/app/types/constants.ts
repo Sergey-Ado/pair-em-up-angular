@@ -22,4 +22,5 @@ export enum EffectPaths {
   UNSELECT = '/audio/effects/effect-unselect.mp3',
   REMOVE = '/audio/effects/effect-remove.mp3',
   ERROR = '/audio/effects/effect-error.mp3',
+  ASSIST = '/audio/effects/effect-assist.mp3',
 }

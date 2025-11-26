@@ -38,4 +38,8 @@ export class SoundService {
   public error(): void {
     this.sound.src = EffectPaths.ERROR;
   }
+
+  public assist(): void {
+    this.sound.src = EffectPaths.ASSIST;
+  }
 }

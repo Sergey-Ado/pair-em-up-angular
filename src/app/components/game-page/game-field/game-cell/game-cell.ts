@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, OnChanges } from '@angular/core';
 import { Store } from '../../../../../store/store';
 import { NgClass } from '@angular/common';
 import { GameService } from '../../../../services/game-service';
@@ -10,7 +10,7 @@ import { ICell } from '../../../../types/game-types';
   templateUrl: './game-cell.html',
   styleUrl: './game-cell.css',
 })
-export class GameCell implements OnInit {
+export class GameCell implements OnChanges {
   public row = input<string>();
   public col = input<string>();
   public value = input<string>();
@@ -37,7 +37,7 @@ export class GameCell implements OnInit {
     return +(value || -1) > 0 ? value : '';
   });
 
-  public ngOnInit(): void {
+  public ngOnChanges(): void {
     this.cell = {
       row: +(this.row() || -1),
       col: +(this.col() || -1),

@@ -24,4 +24,8 @@ export class AssistTools {
   protected eraser(): void {
     this.gameService.eraser();
   }
+
+  protected revert(): void {
+    this.gameService.revert();
+  }
 }
