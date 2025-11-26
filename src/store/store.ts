@@ -16,6 +16,7 @@ interface IState {
   firstCell: TSelectCell;
   secondCell: TSelectCell;
   errorCell: TSelectCell;
+  background: string;
 }
 
 const initialState: IState = {
@@ -32,6 +33,7 @@ const initialState: IState = {
   firstCell: null,
   secondCell: null,
   errorCell: null,
+  background: '',
 };
 
 export const Store = signalStore(
@@ -76,6 +78,9 @@ export const Store = signalStore(
     },
     setErrorCell(errorCell: TSelectCell): void {
       patchState(store, { errorCell });
+    },
+    setBackground(background: string): void {
+      patchState(store, { background });
     },
   })),
 );

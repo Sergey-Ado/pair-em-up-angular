@@ -2,12 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Constants, Modes } from '../types/constants';
 import { Store } from '../../store/store';
 import { ICell, IHintPair } from '../types/game-types';
+import { SoundService } from './sound-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
   private readonly store = inject(Store);
+  private readonly soundService = inject(SoundService);
 
   public mode = Modes.CLASSIC;
   private timerIncrement = 0;
@@ -43,8 +45,9 @@ export class GameService {
     this.clearCounters();
     this.calculateHints();
     this.play = true;
-    // globalStore.sound.start();
+    this.soundService.start();
     // globalStore.sound.startBackground();
+    this.soundService.start();
   }
 
   private updateStoreCells(): void {
@@ -162,7 +165,7 @@ export class GameService {
       } else {
         this.firstCell = cell;
         this.store.setFirstCell(cell);
-        // globalStore.sound.select();
+        this.soundService.select();
         return;
       }
     }
@@ -170,7 +173,7 @@ export class GameService {
     if (this.firstCell === cell) {
       this.firstCell = null;
       this.store.setFirstCell(null);
-      // globalStore.sound.unselect();
+      this.soundService.unselect();
       return;
     }
 
@@ -235,7 +238,7 @@ export class GameService {
     if (!(this.firstCell && this.secondCell)) return;
     this.canClick = false;
     this.store.setSecondCell(this.secondCell);
-    // globalStore.sound.remove();
+    this.soundService.remove();
     const removeDelay = setTimeout(() => {
       if (!(this.firstCell && this.secondCell)) return;
       // this.saveOldCells();
@@ -267,6 +270,6 @@ export class GameService {
       clearTimeout(errorDelay);
       this.canClick = true;
     }, Constants.REMOVE_DELAY);
-    // globalStore.sound.error();
+    this.soundService.error();
   }
 }

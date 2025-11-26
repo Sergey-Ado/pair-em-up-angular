@@ -15,3 +15,11 @@ export enum Modes {
   RANDOM = 'random',
   CHAOTIC = 'chaotic',
 }
+
+export enum EffectPaths {
+  START = '/audio/effects/effect-start.mp3',
+  SELECT = '/audio/effects/effect-select.mp3',
+  UNSELECT = '/audio/effects/effect-unselect.mp3',
+  REMOVE = '/audio/effects/effect-remove.mp3',
+  ERROR = '/audio/effects/effect-error.mp3',
+}
