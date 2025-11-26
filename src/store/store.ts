@@ -25,7 +25,7 @@ const initialState: IState = {
   score: 0,
   hints: 0,
   reverts: 0,
-  adds: 0,
+  adds: 10,
   shuffles: 0,
   erasers: 0,
   cells: [],

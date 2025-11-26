@@ -37,15 +37,15 @@ export class GameService {
     this.mode = mode;
     this.startTimer();
 
+    // this.store.setDefaultValue();
     this.createNewCells();
 
     this.createFirstCells();
     this.updateStoreCells();
 
-    this.clearCounters();
+    // this.clearCounters();
     this.calculateHints();
     this.play = true;
-    this.soundService.start();
     // globalStore.sound.startBackground();
     this.soundService.start();
   }
@@ -271,5 +271,39 @@ export class GameService {
       this.canClick = true;
     }, Constants.REMOVE_DELAY);
     this.soundService.error();
+  }
+
+  public addNumbers(): void {
+    // globalStore.burger.close();
+    // this.endEraserMode();
+    let numbers = this.cells.flat().filter((s) => s);
+    if (this.mode === 'random') {
+      numbers.sort(() => Math.random() - 0.5);
+    }
+    if (this.mode === 'chaotic') {
+      numbers = numbers.map(() => Math.floor(9 * Math.random()) + 1);
+    }
+
+    // globalStore.sound.assist();
+    for (let i = 0; i < numbers.length; i++) {
+      if (this.nextIndex > 449 && i < numbers.length - 1) {
+        // this.gameOver(1);
+        break;
+      }
+      this.setNextValue(numbers[i]);
+    }
+
+    this.updateStoreCells();
+    // globalStore.gameField.showValues(this.cells, this.nextIndex);
+
+    this.store.setReverts(0);
+    this.store.setAdds(this.store.adds() - 1);
+    if (this.firstCell) {
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+    }
+    this.calculateHints();
+    // this.updateCounters();
+    // this.canMove();
   }
 }
