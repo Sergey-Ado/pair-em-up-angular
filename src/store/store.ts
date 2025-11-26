@@ -1,6 +1,6 @@
 import { Pages } from '../app/types/constants';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { TSelectCell } from '../app/types/game-types';
+import { IHintPair, TSelectCell } from '../app/types/game-types';
 
 interface IState {
   pageIndex: Pages;
@@ -18,6 +18,7 @@ interface IState {
   errorCell: TSelectCell;
   background: string;
   eraserMode: boolean;
+  hintPair: IHintPair | null;
 }
 
 const initialState: IState = {
@@ -36,6 +37,7 @@ const initialState: IState = {
   errorCell: null,
   background: '',
   eraserMode: false,
+  hintPair: null,
 };
 
 export const Store = signalStore(
@@ -86,6 +88,9 @@ export const Store = signalStore(
     },
     setBackground(background: string): void {
       patchState(store, { background });
+    },
+    setHintPair(hintPair: IHintPair | null): void {
+      patchState(store, { hintPair });
     },
   })),
 );

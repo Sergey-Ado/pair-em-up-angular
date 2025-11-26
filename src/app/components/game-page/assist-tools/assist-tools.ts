@@ -13,6 +13,14 @@ export class AssistTools {
   protected store = inject(Store);
   protected gameService = inject(GameService);
 
+  protected hint(): void {
+    this.gameService.showHint();
+  }
+
+  protected revert(): void {
+    this.gameService.revert();
+  }
+
   protected add(): void {
     this.gameService.addNumbers();
   }
@@ -23,9 +31,5 @@ export class AssistTools {
 
   protected eraser(): void {
     this.gameService.eraser();
-  }
-
-  protected revert(): void {
-    this.gameService.revert();
   }
 }

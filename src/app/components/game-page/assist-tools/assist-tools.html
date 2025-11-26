@@ -1,4 +1,9 @@
-<button type="button" class="assist-button">
+<button
+  type="button"
+  class="assist-button"
+  (click)="hint()"
+  [disabled]="store.hints() === 0"
+>
   hints: {{ store.hints() > 5 ? "5+" : store.hints() }}
 </button>
 <button

@@ -24,6 +24,11 @@
   background-color: var(--color-cell-error);
 }
 
+.game-cell.hint {
+  /* eslint-disable-next-line css/no-invalid-properties */
+  background-color: var(--color-cell-hint);
+}
+
 @media (width <= 470px) {
   .game-cell {
     width: 30px;

@@ -103,40 +103,6 @@ export class GameService {
     this.store.setErasers(0);
   }
 
-  private calculateHints(): void {
-    this.hints = [];
-    const horizontal = this.cells
-      .flat()
-      .map((item, index) => {
-        return { row: Math.floor(index / 9), col: index % 9, value: item };
-      })
-      .filter((item) => item.value);
-    for (let i = 0; i < horizontal.length - 1; i++) {
-      const pairValue = this.pairValue(
-        horizontal[i].value,
-        horizontal[i + 1].value,
-      );
-      if (pairValue) this.hints.push([horizontal[i], horizontal[i + 1]]);
-    }
-
-    for (let col = 0; col < 9; col++) {
-      const vertical = [];
-      for (let row = 0; row < 50; row++) {
-        if (this.cells[row][col]) {
-          vertical.push({ row, col, value: this.cells[row][col] });
-        }
-      }
-      for (let i = 0; i < vertical.length - 1; i++) {
-        const pairValue = this.pairValue(
-          vertical[i].value,
-          vertical[i + 1].value,
-        );
-        if (pairValue) this.hints.push([vertical[i], vertical[i + 1]]);
-      }
-    }
-    this.store.setHints(this.hints.length);
-  }
-
   private pairValue(firstValue: number, secondValue: number): number {
     if (firstValue === 5 && secondValue === 5) return 3;
     if (firstValue + secondValue === 10) return 2;
@@ -374,7 +340,6 @@ export class GameService {
       this.firstCell = null;
     }
     if (this.oldFirstCell && this.oldSecondCell) {
-      console.log(this.oldFirstCell, this.oldSecondCell);
       this.cells[this.oldFirstCell!.row][this.oldFirstCell.col] =
         this.oldFirstCell.value;
       this.cells[this.oldSecondCell.row][this.oldSecondCell.col] =
@@ -390,10 +355,63 @@ export class GameService {
     }
   }
 
+  private calculateHints(): void {
+    this.hints = [];
+    const horizontal = this.cells
+      .flat()
+      .map((item, index) => {
+        return { row: Math.floor(index / 9), col: index % 9, value: item };
+      })
+      .filter((item) => item.value);
+    for (let i = 0; i < horizontal.length - 1; i++) {
+      const pairValue = this.pairValue(
+        horizontal[i].value,
+        horizontal[i + 1].value,
+      );
+      if (pairValue) this.hints.push([horizontal[i], horizontal[i + 1]]);
+    }
+
+    for (let col = 0; col < 9; col++) {
+      const vertical = [];
+      for (let row = 0; row < 50; row++) {
+        if (this.cells[row][col]) {
+          vertical.push({ row, col, value: this.cells[row][col] });
+        }
+      }
+      for (let i = 0; i < vertical.length - 1; i++) {
+        const pairValue = this.pairValue(
+          vertical[i].value,
+          vertical[i + 1].value,
+        );
+        if (pairValue) this.hints.push([vertical[i], vertical[i + 1]]);
+      }
+    }
+    this.store.setHints(this.hints.length);
+  }
+
   private saveOldCells(): void {
     if (this.firstCell && this.secondCell) {
       this.oldFirstCell = { ...this.firstCell };
       this.oldSecondCell = { ...this.secondCell };
     }
+  }
+
+  public showHint(): void {
+    this.endEraserMode();
+    // globalStore.burger.close();
+    if (this.firstCell) {
+      this.store.setFirstCell(null);
+      this.firstCell = null;
+    }
+    this.canClick = false;
+    const index = Math.floor(this.hints.length * Math.random());
+    this.store.setHintPair(this.hints[index]);
+
+    const hintDelay = setTimeout(() => {
+      this.canClick = true;
+      this.store.setHintPair(null);
+      clearTimeout(hintDelay);
+    }, Constants.HINT_DELAY);
+    this.soundService.assist();
   }
 }

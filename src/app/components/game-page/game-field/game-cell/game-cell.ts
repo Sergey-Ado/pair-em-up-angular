@@ -29,6 +29,15 @@ export class GameCell implements OnChanges {
     cell = this.store.errorCell();
     if (cell === this.cell) classes.push('error');
 
+    const hintPair = this.store.hintPair();
+    if (hintPair) {
+      hintPair.forEach((cell) => {
+        if (cell.row === this.cell.row && cell.col === this.cell.col) {
+          classes.push('hint');
+        }
+      });
+    }
+
     return classes.join(' ');
   });
 
