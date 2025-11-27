@@ -42,4 +42,12 @@ export class SoundService {
   public assist(): void {
     this.sound.src = EffectPaths.ASSIST;
   }
+
+  public win(): void {
+    this.sound.src = EffectPaths.WIN;
+  }
+
+  public loss(): void {
+    this.sound.src = EffectPaths.LOSS;
+  }
 }

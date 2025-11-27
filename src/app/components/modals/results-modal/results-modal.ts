@@ -3,10 +3,11 @@ import { Store } from '../../../../store/store';
 import { TimeFormatPipe } from '../../../pipes/time-format-pipe';
 
 @Component({
-  selector: 'app-time-score',
+  selector: 'app-results-modal',
   imports: [TimeFormatPipe],
-  templateUrl: './time-score.html',
+  templateUrl: './results-modal.html',
+  styleUrl: './results-modal.css',
 })
-export class TimeScore {
+export class ResultsModal {
   protected store = inject(Store);
 }

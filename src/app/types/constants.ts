@@ -23,4 +23,23 @@ export enum EffectPaths {
   REMOVE = '/audio/effects/effect-remove.mp3',
   ERROR = '/audio/effects/effect-error.mp3',
   ASSIST = '/audio/effects/effect-assist.mp3',
+  WIN = '/audio/effects/effect-win.mp3',
+  LOSS = '/audio/effects/effect-loss.mp3',
+}
+
+export enum GameOverCode {
+  WIN,
+  NO_MOVE,
+  LIMIT,
+}
+
+export enum GameOverTitle {
+  WIN = 'win',
+  LOSS = 'loss',
+}
+
+export enum GameOverMessage {
+  WIN = "Congratulate. You've won.",
+  NO_MOVE = 'You have exceeded the limit of 50 lines.',
+  LIMIT = 'You have no available moves',
 }

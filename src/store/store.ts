@@ -1,6 +1,18 @@
-import { Pages } from '../app/types/constants';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  GameOverCode,
+  GameOverTitle,
+  GameOverMessage,
+  Pages,
+} from '../app/types/constants';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { IHintPair, TSelectCell } from '../app/types/game-types';
+import { computed } from '@angular/core';
 
 interface IState {
   pageIndex: Pages;
@@ -19,6 +31,8 @@ interface IState {
   background: string;
   eraserMode: boolean;
   hintPair: IHintPair | null;
+  showResults: boolean;
+  gameOverCode: GameOverCode;
 }
 
 const initialState: IState = {
@@ -38,11 +52,30 @@ const initialState: IState = {
   background: '',
   eraserMode: false,
   hintPair: null,
+  showResults: false,
+  gameOverCode: GameOverCode.WIN,
 };
 
 export const Store = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+  withComputed(({ gameOverCode }) => ({
+    title: computed(() =>
+      gameOverCode() === GameOverCode.WIN
+        ? GameOverTitle.WIN
+        : GameOverTitle.LOSS,
+    ),
+    message: computed(() => {
+      switch (gameOverCode()) {
+        case GameOverCode.WIN:
+          return GameOverMessage.WIN;
+        case GameOverCode.NO_MOVE:
+          return GameOverMessage.NO_MOVE;
+        default:
+          return GameOverMessage.LIMIT;
+      }
+    }),
+  })),
   withMethods((store) => ({
     setPageIndex(pageIndex: Pages): void {
       patchState(store, { pageIndex });
@@ -91,6 +124,12 @@ export const Store = signalStore(
     },
     setHintPair(hintPair: IHintPair | null): void {
       patchState(store, { hintPair });
+    },
+    setShowResults(showResults: boolean): void {
+      patchState(store, { showResults });
+    },
+    setGameOverCode(gameOverCode: GameOverCode): void {
+      patchState(store, { gameOverCode });
     },
   })),
 );

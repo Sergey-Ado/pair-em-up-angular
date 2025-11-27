@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Constants, Modes } from '../types/constants';
+import { Constants, GameOverCode, Modes } from '../types/constants';
 import { Store } from '../../store/store';
 import { ICell, IHintPair } from '../types/game-types';
 import { SoundService } from './sound-service';
@@ -33,6 +33,12 @@ export class GameService {
     this.timerIncrement = setInterval(() => {
       this.store.setTime(this.store.time() + 1);
     }, 1000);
+  }
+
+  private stopTimer(): void {
+    if (this.timerIncrement) {
+      clearInterval(this.timerIncrement);
+    }
   }
 
   public newGame(mode: Modes): void {
@@ -220,7 +226,7 @@ export class GameService {
       clearTimeout(removeDelay);
       this.canClick = true;
       this.calculateHints();
-      // this.canMove();
+      this.canMove();
     }, Constants.REMOVE_DELAY);
   }
 
@@ -254,7 +260,7 @@ export class GameService {
     this.soundService.assist();
     for (let i = 0; i < numbers.length; i++) {
       if (this.nextIndex > 449 && i < numbers.length - 1) {
-        // this.gameOver(1);
+        this.gameOver(GameOverCode.NO_MOVE);
         break;
       }
       this.setNextValue(numbers[i]);
@@ -269,7 +275,7 @@ export class GameService {
       this.firstCell = null;
     }
     this.calculateHints();
-    // this.canMove();
+    this.canMove();
   }
 
   public shuffle(): void {
@@ -302,7 +308,7 @@ export class GameService {
 
     this.updateStoreCells();
     this.soundService.assist();
-    // this.canMove();
+    this.canMove();
   }
 
   public eraser(): void {
@@ -316,7 +322,7 @@ export class GameService {
       this.calculateHints();
       this.updateStoreCells();
       this.soundService.assist();
-      // this.canMove();
+      this.canMove();
     } else {
       if (this.eraserMode) {
         this.endEraserMode();
@@ -413,5 +419,43 @@ export class GameService {
       clearTimeout(hintDelay);
     }, Constants.HINT_DELAY);
     this.soundService.assist();
+  }
+
+  private canMove(): void {
+    if (this.store.score() >= 100) {
+      this.gameOver(GameOverCode.WIN);
+      return;
+    }
+    if (!this.hasCells() && this.store.reverts() === 0) {
+      this.gameOver(GameOverCode.LIMIT);
+    }
+    if (
+      this.store.hints() === 0 &&
+      this.store.adds() === 0 &&
+      this.store.erasers() === 0 &&
+      this.store.reverts() === 0
+    ) {
+      this.gameOver(GameOverCode.LIMIT);
+    }
+  }
+
+  private hasCells(): boolean {
+    return this.cells.flat().some((s) => s);
+  }
+
+  private gameOver(code: GameOverCode): void {
+    // const time = globalStore.gamePage.timeScore.getTime();
+    this.stopTimer();
+    this.store.setGameOverCode(code);
+    this.store.setShowResults(true);
+    // globalStore.gamePage.modal.show(code, this.score, time);
+    // storageStore.saveHighScores(this.mode, this.score, !code, time, this.moves);
+    this.play = false;
+    // globalStore.sound.stopBackground();
+    if (code === GameOverCode.WIN) {
+      this.soundService.win();
+    } else {
+      this.soundService.loss();
+    }
   }
 }

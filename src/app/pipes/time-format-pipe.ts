@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'timeFormatPipe',
 })
-export class TimeFormatPipePipe implements PipeTransform {
+export class TimeFormatPipe implements PipeTransform {
   public transform(value: number): string {
     const seconds = value % 60;
     const minutes = Math.floor(value / 60);

@@ -1,0 +1,13 @@
+<div class="results-modal">
+  <h2>{{ store.title() }}</h2>
+  <p>{{ store.message() }}</p>
+  <div class="time-score">
+    <span>score: {{ store.score() }}</span>
+    <span>time: {{ store.time() | timeFormatPipe }}</span>
+  </div>
+  <div class="controls">
+    <button type="button">play again</button>
+    <button type="button">main menu</button>
+    <button type="button">high scores</button>
+  </div>
+</div>
