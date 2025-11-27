@@ -21,7 +21,7 @@
 }
 
 @media (width <= 470px) {
-  .game-cell {
+  .border-cell {
     width: 30px;
     height: 30px;
   }
