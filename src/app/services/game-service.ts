@@ -41,8 +41,10 @@ export class GameService {
     }
   }
 
-  public newGame(mode: Modes): void {
-    this.mode = mode;
+  public newGame(mode: Modes | undefined = undefined): void {
+    if (mode) {
+      this.mode = mode;
+    }
     this.startTimer();
 
     // this.store.setDefaultValue();
