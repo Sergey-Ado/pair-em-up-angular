@@ -17,4 +17,14 @@ export class ModeSelection {
     this.store.setPageIndex(Pages.GAME);
     this.gameService.newGame(Modes.CLASSIC);
   }
+
+  protected startRandom(): void {
+    this.store.setPageIndex(Pages.GAME);
+    this.gameService.newGame(Modes.RANDOM);
+  }
+
+  protected startChaotic(): void {
+    this.store.setPageIndex(Pages.GAME);
+    this.gameService.newGame(Modes.CHAOTIC);
+  }
 }
