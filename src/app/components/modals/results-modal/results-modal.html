@@ -2,8 +2,8 @@
   <h2>{{ store.title() }}</h2>
   <p>{{ store.message() }}</p>
   <div class="time-score">
-    <span>score: {{ store.score() }}</span>
-    <span>time: {{ store.time() | timeFormatPipe }}</span>
+    <span>score: {{ store.gameCounters.score() }}</span>
+    <span>time: {{ store.gameCounters.time() | timeFormatPipe }}</span>
   </div>
   <div class="controls">
     <button type="button">play again</button>

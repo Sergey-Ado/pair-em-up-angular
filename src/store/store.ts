@@ -14,8 +14,7 @@ import {
 import { IHintPair, TSelectCell } from '../app/types/game-types';
 import { computed } from '@angular/core';
 
-interface IState {
-  pageIndex: Pages;
+interface IGameCounters {
   time: number;
   score: number;
   hints: number;
@@ -23,6 +22,10 @@ interface IState {
   adds: number;
   shuffles: number;
   erasers: number;
+}
+
+interface IState {
+  pageIndex: Pages;
   cells: number[][];
   canHover: boolean;
   firstCell: TSelectCell;
@@ -33,10 +36,10 @@ interface IState {
   hintPair: IHintPair | null;
   showResults: boolean;
   gameOverCode: GameOverCode;
+  gameCounters: IGameCounters;
 }
 
-const initialState: IState = {
-  pageIndex: Pages.START,
+const defaultGameCounters: IGameCounters = {
   time: 0,
   score: 0,
   hints: 0,
@@ -44,6 +47,10 @@ const initialState: IState = {
   adds: 10,
   shuffles: 5,
   erasers: 5,
+};
+
+const initialState: IState = {
+  pageIndex: Pages.START,
   cells: [],
   canHover: true,
   firstCell: null,
@@ -54,6 +61,7 @@ const initialState: IState = {
   hintPair: null,
   showResults: false,
   gameOverCode: GameOverCode.WIN,
+  gameCounters: defaultGameCounters,
 };
 
 export const Store = signalStore(
@@ -81,25 +89,39 @@ export const Store = signalStore(
       patchState(store, { pageIndex });
     },
     setTime(time: number): void {
-      patchState(store, { time });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, time },
+      }));
     },
     setScore(score: number): void {
-      patchState(store, { score });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, score },
+      }));
     },
     setHints(hints: number): void {
-      patchState(store, { hints });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, hints },
+      }));
     },
     setReverts(reverts: number): void {
-      patchState(store, { reverts });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, reverts },
+      }));
     },
     setAdds(adds: number): void {
-      patchState(store, { adds });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, adds },
+      }));
     },
     setShuffles(shuffles: number): void {
-      patchState(store, { shuffles });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, shuffles },
+      }));
     },
     setErasers(erasers: number): void {
-      patchState(store, { erasers });
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, erasers },
+      }));
     },
     setCells(cells: number[][]): void {
       patchState(store, { cells });

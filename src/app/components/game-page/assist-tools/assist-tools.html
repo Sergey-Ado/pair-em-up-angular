@@ -2,39 +2,40 @@
   type="button"
   class="assist-button"
   (click)="hint()"
-  [disabled]="store.hints() === 0"
+  [disabled]="store.gameCounters.hints() === 0"
 >
-  hints: {{ store.hints() > 5 ? "5+" : store.hints() }}
+  hints:
+  {{ store.gameCounters.hints() > 5 ? "5+" : store.gameCounters.hints() }}
 </button>
 <button
   type="button"
   class="assist-button"
   (click)="revert()"
-  [disabled]="store.reverts() === 0"
+  [disabled]="store.gameCounters.reverts() === 0"
 >
-  revert: {{ store.reverts() }} / 1
+  revert: {{ store.gameCounters.reverts() }} / 1
 </button>
 <button
   type="button"
   class="assist-button"
   (click)="add()"
-  [disabled]="store.adds() === 0"
+  [disabled]="store.gameCounters.adds() === 0"
 >
-  add numbers: {{ store.adds() }} / 10
+  add numbers: {{ store.gameCounters.adds() }} / 10
 </button>
 <button
   type="button"
   class="assist-button"
   (click)="shuffle()"
-  [disabled]="store.shuffles() === 0"
+  [disabled]="store.gameCounters.shuffles() === 0"
 >
-  shuffle: {{ store.shuffles() }} / 5
+  shuffle: {{ store.gameCounters.shuffles() }} / 5
 </button>
 <button
   type="button"
   [ngClass]="['assist-button', store.eraserMode() ? 'eraser-mode' : '']"
   (click)="eraser()"
-  [disabled]="store.erasers() === 0"
+  [disabled]="store.gameCounters.erasers() === 0"
 >
-  eraser: {{ store.erasers() }} / 5
+  eraser: {{ store.gameCounters.erasers() }} / 5
 </button>

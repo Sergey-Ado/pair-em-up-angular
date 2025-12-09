@@ -31,7 +31,7 @@ export class GameService {
       clearInterval(this.timerIncrement);
     }
     this.timerIncrement = setInterval(() => {
-      this.store.setTime(this.store.time() + 1);
+      this.store.setTime(this.store.gameCounters.time() + 1);
     }, 1000);
   }
 
@@ -157,7 +157,7 @@ export class GameService {
 
     const pairValue = this.pairCellValue(this.firstCell, this.secondCell);
     if (pairValue && (this.isHorizontal() || this.isVertical())) {
-      this.store.setScore(this.store.score() + pairValue);
+      this.store.setScore(this.store.gameCounters.score() + pairValue);
       this.store.setReverts(1);
       this.moves++;
       this.removePair();
@@ -271,7 +271,7 @@ export class GameService {
     this.updateStoreCells();
 
     this.store.setReverts(0);
-    this.store.setAdds(this.store.adds() - 1);
+    this.store.setAdds(this.store.gameCounters.adds() - 1);
     if (this.firstCell) {
       this.store.setFirstCell(null);
       this.firstCell = null;
@@ -299,7 +299,7 @@ export class GameService {
       (item, index) => (this.cells[item.i][item.j] = newValue[index]),
     );
 
-    this.store.setShuffles(this.store.shuffles() - 1);
+    this.store.setShuffles(this.store.gameCounters.shuffles() - 1);
     this.store.setReverts(0);
     this.calculateHints();
 
@@ -319,7 +319,7 @@ export class GameService {
       this.cells[this.firstCell.row][this.firstCell.col] = 0;
       this.store.setFirstCell(null);
       this.firstCell = null;
-      this.store.setErasers(this.store.erasers() - 1);
+      this.store.setErasers(this.store.gameCounters.erasers() - 1);
       this.store.setReverts(0);
       this.calculateHints();
       this.updateStoreCells();
@@ -355,7 +355,7 @@ export class GameService {
       this.updateStoreCells();
 
       const delta = this.pairCellValue(this.oldFirstCell, this.oldSecondCell);
-      this.store.setScore(this.store.score() - delta);
+      this.store.setScore(this.store.gameCounters.score() - delta);
       this.store.setReverts(0);
       this.moves--;
       this.calculateHints();
@@ -424,18 +424,18 @@ export class GameService {
   }
 
   private canMove(): void {
-    if (this.store.score() >= 100) {
+    if (this.store.gameCounters.score() >= 100) {
       this.gameOver(GameOverCode.WIN);
       return;
     }
-    if (!this.hasCells() && this.store.reverts() === 0) {
+    if (!this.hasCells() && this.store.gameCounters.reverts() === 0) {
       this.gameOver(GameOverCode.LIMIT);
     }
     if (
-      this.store.hints() === 0 &&
-      this.store.adds() === 0 &&
-      this.store.erasers() === 0 &&
-      this.store.reverts() === 0
+      this.store.gameCounters.hints() === 0 &&
+      this.store.gameCounters.adds() === 0 &&
+      this.store.gameCounters.erasers() === 0 &&
+      this.store.gameCounters.reverts() === 0
     ) {
       this.gameOver(GameOverCode.LIMIT);
     }
