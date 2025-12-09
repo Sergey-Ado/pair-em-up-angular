@@ -1,4 +1,4 @@
-@for (row of store.cells(); track $index; let rowIndex = $index) {
+@for (row of store.gameState.cells(); track $index; let rowIndex = $index) {
   <app-border-cell row="{{ rowIndex }}" />
   @for (cell of row; track $index; let colIndex = $index) {
     <app-game-cell

@@ -20,16 +20,16 @@ export class GameCell implements OnChanges {
 
   protected class = computed(() => {
     const classes = ['game-cell'];
-    if (this.store.canHover()) classes.push('can-hover');
+    if (this.store.gameState.canHover()) classes.push('can-hover');
 
-    let cell = this.store.firstCell();
+    let cell = this.store.gameState.firstCell();
     if (cell === this.cell) classes.push('active');
-    cell = this.store.secondCell();
+    cell = this.store.gameState.secondCell();
     if (cell === this.cell) classes.push('active');
-    cell = this.store.errorCell();
+    cell = this.store.gameState.errorCell();
     if (cell === this.cell) classes.push('error');
 
-    const hintPair = this.store.hintPair();
+    const hintPair = this.store.gameState.hintPair();
     if (hintPair) {
       hintPair.forEach((cell) => {
         if (cell.row === this.cell.row && cell.col === this.cell.col) {

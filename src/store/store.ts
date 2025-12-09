@@ -24,19 +24,23 @@ interface IGameCounters {
   erasers: number;
 }
 
-interface IState {
-  pageIndex: Pages;
+interface IGameState {
   cells: number[][];
   canHover: boolean;
   firstCell: TSelectCell;
   secondCell: TSelectCell;
   errorCell: TSelectCell;
-  background: string;
   eraserMode: boolean;
   hintPair: IHintPair | null;
+}
+
+interface IState {
+  pageIndex: Pages;
+  background: string;
   showResults: boolean;
   gameOverCode: GameOverCode;
   gameCounters: IGameCounters;
+  gameState: IGameState;
 }
 
 const defaultGameCounters: IGameCounters = {
@@ -49,19 +53,23 @@ const defaultGameCounters: IGameCounters = {
   erasers: 5,
 };
 
-const initialState: IState = {
-  pageIndex: Pages.START,
+const defaultGameState: IGameState = {
   cells: [],
   canHover: true,
   firstCell: null,
   secondCell: null,
   errorCell: null,
-  background: '',
   eraserMode: false,
   hintPair: null,
+};
+
+const initialState: IState = {
+  pageIndex: Pages.START,
+  background: '',
   showResults: false,
   gameOverCode: GameOverCode.WIN,
   gameCounters: defaultGameCounters,
+  gameState: defaultGameState,
 };
 
 export const Store = signalStore(
@@ -124,28 +132,42 @@ export const Store = signalStore(
       }));
     },
     setCells(cells: number[][]): void {
-      patchState(store, { cells });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, cells },
+      }));
     },
     setCanHover(canHover: boolean): void {
-      patchState(store, { canHover });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, canHover },
+      }));
     },
     setFirstCell(firstCell: TSelectCell): void {
-      patchState(store, { firstCell });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, firstCell },
+      }));
     },
     setSecondCell(secondCell: TSelectCell): void {
-      patchState(store, { secondCell });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, secondCell },
+      }));
     },
     setErrorCell(errorCell: TSelectCell): void {
-      patchState(store, { errorCell });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, errorCell },
+      }));
     },
     setEraserMode(eraserMode: boolean): void {
-      patchState(store, { eraserMode });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, eraserMode },
+      }));
     },
     setBackground(background: string): void {
       patchState(store, { background });
     },
     setHintPair(hintPair: IHintPair | null): void {
-      patchState(store, { hintPair });
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, hintPair },
+      }));
     },
     setShowResults(showResults: boolean): void {
       patchState(store, { showResults });

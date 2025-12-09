@@ -33,7 +33,10 @@
 </button>
 <button
   type="button"
-  [ngClass]="['assist-button', store.eraserMode() ? 'eraser-mode' : '']"
+  [ngClass]="[
+    'assist-button',
+    store.gameState.eraserMode() ? 'eraser-mode' : '',
+  ]"
   (click)="eraser()"
   [disabled]="store.gameCounters.erasers() === 0"
 >
