@@ -36,7 +36,6 @@ interface IGameState {
 
 interface IState {
   pageIndex: Pages;
-  background: string;
   showResults: boolean;
   gameOverCode: GameOverCode;
   gameCounters: IGameCounters;
@@ -65,7 +64,6 @@ const defaultGameState: IGameState = {
 
 const initialState: IState = {
   pageIndex: Pages.START,
-  background: '',
   showResults: false,
   gameOverCode: GameOverCode.WIN,
   gameCounters: defaultGameCounters,
@@ -95,6 +93,12 @@ export const Store = signalStore(
   withMethods((store) => ({
     setPageIndex(pageIndex: Pages): void {
       patchState(store, { pageIndex });
+    },
+    setShowResults(showResults: boolean): void {
+      patchState(store, { showResults });
+    },
+    setGameOverCode(gameOverCode: GameOverCode): void {
+      patchState(store, { gameOverCode });
     },
     setTime(time: number): void {
       patchState(store, (state) => ({
@@ -161,19 +165,10 @@ export const Store = signalStore(
         gameState: { ...state.gameState, eraserMode },
       }));
     },
-    setBackground(background: string): void {
-      patchState(store, { background });
-    },
     setHintPair(hintPair: IHintPair | null): void {
       patchState(store, (state) => ({
         gameState: { ...state.gameState, hintPair },
       }));
-    },
-    setShowResults(showResults: boolean): void {
-      patchState(store, { showResults });
-    },
-    setGameOverCode(gameOverCode: GameOverCode): void {
-      patchState(store, { gameOverCode });
     },
   })),
 );
