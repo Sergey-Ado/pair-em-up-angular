@@ -3,6 +3,7 @@ import {
   GameOverTitle,
   GameOverMessage,
   Pages,
+  Modes,
 } from '../app/types/constants';
 import {
   patchState,
@@ -16,6 +17,7 @@ import { computed } from '@angular/core';
 
 interface IGameCounters {
   time: number;
+  moves: number;
   score: number;
   hints: number;
   reverts: number;
@@ -25,6 +27,7 @@ interface IGameCounters {
 }
 
 interface IGameState {
+  mode: Modes;
   cells: number[][];
   canHover: boolean;
   firstCell: TSelectCell;
@@ -44,6 +47,7 @@ interface IState {
 
 const defaultGameCounters: IGameCounters = {
   time: 0,
+  moves: 0,
   score: 0,
   hints: 0,
   reverts: 0,
@@ -53,6 +57,7 @@ const defaultGameCounters: IGameCounters = {
 };
 
 const defaultGameState: IGameState = {
+  mode: Modes.CLASSIC,
   cells: [],
   canHover: true,
   firstCell: null,
@@ -105,6 +110,11 @@ export const Store = signalStore(
         gameCounters: { ...state.gameCounters, time },
       }));
     },
+    setMoves(moves: number): void {
+      patchState(store, (state) => ({
+        gameCounters: { ...state.gameCounters, moves },
+      }));
+    },
     setScore(score: number): void {
       patchState(store, (state) => ({
         gameCounters: { ...state.gameCounters, score },
@@ -133,6 +143,11 @@ export const Store = signalStore(
     setErasers(erasers: number): void {
       patchState(store, (state) => ({
         gameCounters: { ...state.gameCounters, erasers },
+      }));
+    },
+    setMode(mode: Modes): void {
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, mode },
       }));
     },
     setCells(cells: number[][]): void {

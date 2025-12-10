@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Constants, GameOverCode, Modes } from '../types/constants';
 import { Store } from '../../store/store';
-import { ICell, IHintPair } from '../types/game-types';
+import { ICell, IHintPair, TSelectCell } from '../types/game-types';
 import { SoundService } from './sound-service';
 
 @Injectable({
@@ -11,19 +11,14 @@ export class GameService {
   private readonly store = inject(Store);
   private readonly soundService = inject(SoundService);
 
-  public mode = Modes.CLASSIC;
   private timerIncrement = 0;
   private cells: number[][] = [[0]];
   private nextIndex = 0;
   private play = false;
-  private moves = 0;
   private hints: IHintPair[] = [];
   private canClick = true;
-  private firstCell: ICell | null = null;
-  private secondCell: ICell | null = null;
-  private oldFirstCell: ICell | null = null;
-  private oldSecondCell: ICell | null = null;
-  private eraserMode = false;
+  private oldFirstCell: TSelectCell = null;
+  private oldSecondCell: TSelectCell = null;
 
   private startTimer(time = 0): void {
     this.store.setTime(time);
@@ -43,7 +38,7 @@ export class GameService {
 
   public newGame(mode: Modes | undefined = undefined): void {
     if (mode) {
-      this.mode = mode;
+      this.store.setMode(mode);
     }
     this.startTimer();
 
@@ -75,7 +70,7 @@ export class GameService {
 
   private createFirstCells(): void {
     let numbers = [];
-    if (this.mode === 'chaotic') {
+    if (this.store.gameState.mode() === 'chaotic') {
       for (let i = 0; i < 27; i++) {
         numbers.push(Math.floor(9 * Math.random()) + 1);
       }
@@ -86,7 +81,7 @@ export class GameService {
         .filter((s) => s !== 10)
         .join('')
         .split('');
-      if (this.mode === 'random') {
+      if (this.store.gameState.mode() === 'random') {
         numbers.sort(() => Math.random() - 0.5);
       }
     }
@@ -102,7 +97,7 @@ export class GameService {
 
   private clearCounters(): void {
     this.store.setScore(0);
-    this.moves = 0;
+    this.store.setMoves(0);
 
     this.store.setHints(0);
     this.store.setReverts(0);
@@ -127,11 +122,11 @@ export class GameService {
   public getCellSignal(cell: ICell): void {
     if (!this.canClick) return;
 
-    if (this.firstCell === null) {
-      if (this.eraserMode) {
+    if (this.store.gameState.firstCell() === null) {
+      if (this.store.gameState.eraserMode()) {
         this.endEraserMode();
         this.canClick = false;
-        this.firstCell = cell;
+        this.store.setFirstCell(cell);
         this.store.setFirstCell(cell);
         setTimeout(() => {
           this.canClick = true;
@@ -139,27 +134,32 @@ export class GameService {
         }, Constants.REMOVE_DELAY);
         return;
       } else {
-        this.firstCell = cell;
+        this.store.setFirstCell(cell);
         this.store.setFirstCell(cell);
         this.soundService.select();
         return;
       }
     }
 
-    if (this.firstCell === cell) {
-      this.firstCell = null;
+    if (this.store.gameState.firstCell() === cell) {
+      this.store.setFirstCell(null);
       this.store.setFirstCell(null);
       this.soundService.unselect();
       return;
     }
 
-    this.secondCell = cell;
+    this.store.setSecondCell(cell);
 
-    const pairValue = this.pairCellValue(this.firstCell, this.secondCell);
+    let pairValue = 0;
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+    if (firstCell && secondCell) {
+      pairValue = this.pairCellValue(firstCell, secondCell);
+    }
     if (pairValue && (this.isHorizontal() || this.isVertical())) {
       this.store.setScore(this.store.gameCounters.score() + pairValue);
       this.store.setReverts(1);
-      this.moves++;
+      this.store.setMoves(this.store.gameCounters.moves() + 1);
       this.removePair();
     } else {
       this.cancelPair();
@@ -167,27 +167,37 @@ export class GameService {
   }
 
   private isVertical(): boolean {
-    if (!(this.firstCell && this.secondCell)) return false;
-    const col = this.firstCell.col;
-    if (col !== this.secondCell.col) return false;
-    const dRow = this.secondCell.row > this.firstCell.row ? 1 : -1;
-    let row = this.firstCell.row + dRow;
-    while (this.cells[row][col] === 0) {
-      row += dRow;
+    if (
+      !(this.store.gameState.firstCell() && this.store.gameState.secondCell())
+    )
+      return false;
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+    if (firstCell && secondCell) {
+      const col = firstCell.col;
+      if (col !== secondCell.col) return false;
+      const dRow = secondCell.row > firstCell.row ? 1 : -1;
+      let row = firstCell.row + dRow;
+      while (this.cells[row][col] === 0) {
+        row += dRow;
+      }
+      return row === secondCell.row;
     }
-    return row === this.secondCell.row;
+    return false;
   }
 
   private isHorizontal(): boolean {
-    if (!(this.firstCell && this.secondCell)) return false;
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+    if (!(firstCell && secondCell)) return false;
+
     const dCol =
-      (this.firstCell.row === this.secondCell.row &&
-        this.firstCell.col < this.secondCell.col) ||
-      this.firstCell.row < this.secondCell.row
+      (firstCell.row === secondCell.row && firstCell.col < secondCell.col) ||
+      firstCell.row < secondCell.row
         ? 1
         : -1;
-    let row = this.firstCell.row;
-    let col = this.firstCell.col + dCol;
+    let row = firstCell.row;
+    let col = firstCell.col + dCol;
     if (col < 0) {
       row--;
       col = 8;
@@ -207,24 +217,25 @@ export class GameService {
         col = 0;
       }
     }
-    return row === this.secondCell.row && col === this.secondCell.col;
+    return row === secondCell.row && col === secondCell.col;
   }
 
   private removePair(): void {
-    if (!(this.firstCell && this.secondCell)) return;
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+
+    if (!(firstCell && secondCell)) return;
+
     this.canClick = false;
-    this.store.setSecondCell(this.secondCell);
     this.soundService.remove();
     const removeDelay = setTimeout(() => {
-      if (!(this.firstCell && this.secondCell)) return;
+      if (!(firstCell && secondCell)) return;
       this.saveOldCells();
-      this.cells[this.firstCell.row][this.firstCell.col] = 0;
-      this.cells[this.secondCell.row][this.secondCell.col] = 0;
+      this.cells[firstCell.row][firstCell.col] = 0;
+      this.cells[secondCell.row][secondCell.col] = 0;
       this.store.setFirstCell(null);
       this.store.setSecondCell(null);
       this.updateStoreCells();
-      this.firstCell = null;
-      this.secondCell = null;
       clearTimeout(removeDelay);
       this.canClick = true;
       this.calculateHints();
@@ -233,15 +244,16 @@ export class GameService {
   }
 
   private cancelPair(): void {
-    if (!(this.firstCell && this.secondCell)) return;
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+
+    if (!(firstCell && secondCell)) return;
     this.canClick = false;
-    this.store.setErrorCell(this.secondCell);
+    this.store.setErrorCell(secondCell);
     const errorDelay = setTimeout(() => {
-      if (!(this.firstCell && this.secondCell)) return;
+      if (!(firstCell && secondCell)) return;
       this.store.setFirstCell(null);
-      this.firstCell = null;
       this.store.setErrorCell(null);
-      this.secondCell = null;
       clearTimeout(errorDelay);
       this.canClick = true;
     }, Constants.REMOVE_DELAY);
@@ -252,10 +264,10 @@ export class GameService {
     // globalStore.burger.close();
     this.endEraserMode();
     let numbers = this.cells.flat().filter((s) => s);
-    if (this.mode === 'random') {
+    if (this.store.gameState.mode() === 'random') {
       numbers.sort(() => Math.random() - 0.5);
     }
-    if (this.mode === 'chaotic') {
+    if (this.store.gameState.mode() === 'chaotic') {
       numbers = numbers.map(() => Math.floor(9 * Math.random()) + 1);
     }
 
@@ -272,9 +284,8 @@ export class GameService {
 
     this.store.setReverts(0);
     this.store.setAdds(this.store.gameCounters.adds() - 1);
-    if (this.firstCell) {
+    if (this.store.gameState.firstCell()) {
       this.store.setFirstCell(null);
-      this.firstCell = null;
     }
     this.calculateHints();
     this.canMove();
@@ -303,9 +314,8 @@ export class GameService {
     this.store.setReverts(0);
     this.calculateHints();
 
-    if (this.firstCell) {
+    if (this.store.gameState.firstCell()) {
       this.store.setFirstCell(null);
-      this.firstCell = null;
     }
 
     this.updateStoreCells();
@@ -315,10 +325,11 @@ export class GameService {
 
   public eraser(): void {
     // globalStore.burger.close();
-    if (this.firstCell) {
-      this.cells[this.firstCell.row][this.firstCell.col] = 0;
+    const firstCell = this.store.gameState.firstCell();
+
+    if (firstCell) {
+      this.cells[firstCell.row][firstCell.col] = 0;
       this.store.setFirstCell(null);
-      this.firstCell = null;
       this.store.setErasers(this.store.gameCounters.erasers() - 1);
       this.store.setReverts(0);
       this.calculateHints();
@@ -326,38 +337,38 @@ export class GameService {
       this.soundService.assist();
       this.canMove();
     } else {
-      if (this.eraserMode) {
+      if (this.store.gameState.eraserMode()) {
         this.endEraserMode();
       } else {
-        this.eraserMode = true;
+        this.store.setEraserMode(true);
         this.store.setEraserMode(true);
       }
     }
   }
 
   private endEraserMode(): void {
-    this.eraserMode = false;
+    this.store.setEraserMode(false);
     this.store.setEraserMode(false);
   }
 
   public revert(): void {
     this.endEraserMode();
     // globalStore.burger.close();
-    if (this.firstCell) {
+    if (this.store.gameState.firstCell()) {
       this.store.setFirstCell(null);
-      this.firstCell = null;
     }
     if (this.oldFirstCell && this.oldSecondCell) {
-      this.cells[this.oldFirstCell!.row][this.oldFirstCell.col] =
+      this.cells[this.oldFirstCell.row][this.oldFirstCell.col] =
         this.oldFirstCell.value;
       this.cells[this.oldSecondCell.row][this.oldSecondCell.col] =
         this.oldSecondCell.value;
       this.updateStoreCells();
 
       const delta = this.pairCellValue(this.oldFirstCell, this.oldSecondCell);
+      console.log(delta, this.oldFirstCell, this.oldSecondCell);
       this.store.setScore(this.store.gameCounters.score() - delta);
       this.store.setReverts(0);
-      this.moves--;
+      this.store.setMoves(this.store.gameCounters.moves() - 1);
       this.calculateHints();
       this.soundService.assist();
     }
@@ -398,18 +409,20 @@ export class GameService {
   }
 
   private saveOldCells(): void {
-    if (this.firstCell && this.secondCell) {
-      this.oldFirstCell = { ...this.firstCell };
-      this.oldSecondCell = { ...this.secondCell };
+    const firstCell = this.store.gameState.firstCell();
+    const secondCell = this.store.gameState.secondCell();
+
+    if (firstCell && secondCell) {
+      this.oldFirstCell = firstCell;
+      this.oldSecondCell = secondCell;
     }
   }
 
   public showHint(): void {
     this.endEraserMode();
     // globalStore.burger.close();
-    if (this.firstCell) {
+    if (this.store.gameState.firstCell()) {
       this.store.setFirstCell(null);
-      this.firstCell = null;
     }
     this.canClick = false;
     const index = Math.floor(this.hints.length * Math.random());
