@@ -1,5 +1,5 @@
 {
-  "src/**/*.{js}": ["npm run lint", "npm run format"],
+  "src/**/*.{ts,js}": ["npm run lint", "npm run format"],
   "src/**/*.{css,scss}": ["stylelint", "npm run format"],
   "src/**/*.html": ["npm run format"]
 }
