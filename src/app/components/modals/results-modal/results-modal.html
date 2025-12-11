@@ -6,7 +6,7 @@
     <span>time: {{ store.gameCounters.time() | timeFormatPipe }}</span>
   </div>
   <div class="controls">
-    <button type="button">play again</button>
+    <button type="button" (click)="gameAgain()">play again</button>
     <button type="button" (click)="showStart()">main menu</button>
     <button type="button">high scores</button>
   </div>
