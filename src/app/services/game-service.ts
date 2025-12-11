@@ -42,11 +42,11 @@ export class GameService {
     }
     this.startTimer();
 
-    // this.store.setDefaultValue();
     this.createNewCells();
 
     this.createFirstCells();
     this.updateStoreCells();
+    this.store.resetGame();
 
     // this.clearCounters();
     this.calculateHints();

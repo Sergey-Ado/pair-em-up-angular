@@ -185,5 +185,11 @@ export const Store = signalStore(
         gameState: { ...state.gameState, hintPair },
       }));
     },
+    resetGame(): void {
+      patchState(store, (state) => ({
+        gameCounters: defaultGameCounters,
+        gameState: { ...state.gameState, firstCell: null, eraserMode: false },
+      }));
+    },
   })),
 );
