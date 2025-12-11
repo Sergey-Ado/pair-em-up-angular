@@ -13,8 +13,6 @@ export class GameService {
 
   private timerIncrement = 0;
   private cells: number[][] = [[0]];
-  private nextIndex = 0;
-  private play = false;
   private hints: IHintPair[] = [];
   private canClick = true;
   private oldFirstCell: TSelectCell = null;
@@ -48,15 +46,14 @@ export class GameService {
     this.updateStoreCells();
     this.store.resetGame();
 
-    // this.clearCounters();
     this.calculateHints();
-    this.play = true;
+    this.store.setPlay(true);
     // globalStore.sound.startBackground();
     this.soundService.start();
   }
 
   private updateStoreCells(): void {
-    const countRow = Math.ceil(this.nextIndex / 9);
+    const countRow = Math.ceil(this.store.gameState.nextIndex() / 9);
     const cells = this.cells.slice(0, countRow);
     this.store.setCells(cells);
   }
@@ -65,7 +62,7 @@ export class GameService {
     this.cells = Array(50)
       .fill(0)
       .map(() => Array(9).fill(0));
-    this.nextIndex = 0;
+    this.store.setNextIndex(0);
   }
 
   private createFirstCells(): void {
@@ -89,21 +86,11 @@ export class GameService {
   }
 
   private setNextValue(value: number): void {
-    const i = Math.floor(this.nextIndex / 9);
-    const j = this.nextIndex % 9;
+    const nextIndex = this.store.gameState.nextIndex();
+    const i = Math.floor(nextIndex / 9);
+    const j = nextIndex % 9;
     this.cells[i][j] = value;
-    this.nextIndex++;
-  }
-
-  private clearCounters(): void {
-    this.store.setScore(0);
-    this.store.setMoves(0);
-
-    this.store.setHints(0);
-    this.store.setReverts(0);
-    this.store.setAdds(0);
-    this.store.setShuffles(0);
-    this.store.setErasers(0);
+    this.store.setNextIndex(nextIndex + 1);
   }
 
   private pairValue(firstValue: number, secondValue: number): number {
@@ -273,7 +260,7 @@ export class GameService {
 
     this.soundService.assist();
     for (let i = 0; i < numbers.length; i++) {
-      if (this.nextIndex > 449 && i < numbers.length - 1) {
+      if (this.store.gameState.nextIndex() > 449 && i < numbers.length - 1) {
         this.gameOver(GameOverCode.NO_MOVE);
         break;
       }
@@ -465,7 +452,7 @@ export class GameService {
     this.store.setShowResults(true);
     // globalStore.gamePage.modal.show(code, this.score, time);
     // storageStore.saveHighScores(this.mode, this.score, !code, time, this.moves);
-    this.play = false;
+    this.store.setPlay(false);
     // globalStore.sound.stopBackground();
     if (code === GameOverCode.WIN) {
       this.soundService.win();

@@ -43,3 +43,10 @@ export enum GameOverMessage {
   NO_MOVE = 'You have exceeded the limit of 50 lines.',
   LIMIT = 'You have no available moves',
 }
+
+export enum StorageKeys {
+  PREFIX = 'sergey-ado-pair-em-up-angular-',
+  HIGH_SCORES = `${PREFIX}high-scores`,
+  GAME = `${PREFIX}game`,
+  SETTINGS = `${PREFIX}settings`,
+}

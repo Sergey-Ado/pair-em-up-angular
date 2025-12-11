@@ -35,6 +35,8 @@ interface IGameState {
   errorCell: TSelectCell;
   eraserMode: boolean;
   hintPair: IHintPair | null;
+  play: boolean;
+  nextIndex: number;
 }
 
 interface IState {
@@ -65,6 +67,8 @@ const defaultGameState: IGameState = {
   errorCell: null,
   eraserMode: false,
   hintPair: null,
+  play: false,
+  nextIndex: 0,
 };
 
 const initialState: IState = {
@@ -183,6 +187,16 @@ export const Store = signalStore(
     setHintPair(hintPair: IHintPair | null): void {
       patchState(store, (state) => ({
         gameState: { ...state.gameState, hintPair },
+      }));
+    },
+    setPlay(play: boolean): void {
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, play },
+      }));
+    },
+    setNextIndex(nextIndex: number): void {
+      patchState(store, (state) => ({
+        gameState: { ...state.gameState, nextIndex },
       }));
     },
     resetGame(): void {
