@@ -67,6 +67,7 @@ export class GameService {
       }
       this.cells.push(line);
     }
+    this.store.setNextIndex(0);
   }
 
   private createFirstCells(): void {
