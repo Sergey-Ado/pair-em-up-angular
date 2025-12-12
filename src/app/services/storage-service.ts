@@ -37,7 +37,7 @@ export class StorageService {
     localStorage.setItem(StorageKeys.GAME, json);
   }
 
-  public loadGame(): StorageGameData {
+  private loadGame(): StorageGameData {
     const json = localStorage.getItem(StorageKeys.GAME);
     if (!json) return defaultStorageGameData;
 
@@ -90,5 +90,22 @@ export class StorageService {
       };
     }
     return null;
+  }
+
+  public setLoadGame(data: StorageGameData): number[][] {
+    this.store.setMode(data.mode);
+    this.store.setNextIndex(data.nextIndex);
+    this.store.setCells(data.cells);
+
+    this.store.setTime(data.counters.time);
+    this.store.setMoves(data.counters.moves);
+    this.store.setScore(data.counters.score);
+    this.store.setHints(data.counters.hints);
+    this.store.setReverts(data.counters.reverts);
+    this.store.setAdds(data.counters.adds);
+    this.store.setShuffles(data.counters.shuffles);
+    this.store.setErasers(data.counters.erasers);
+
+    return data.cells;
   }
 }
