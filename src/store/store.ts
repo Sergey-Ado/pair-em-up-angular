@@ -15,7 +15,7 @@ import {
 import { IHintPair, TSelectCell } from '../app/types/game-types';
 import { computed } from '@angular/core';
 
-interface IGameCounters {
+export interface IGameCounters {
   time: number;
   moves: number;
   score: number;
@@ -47,7 +47,7 @@ interface IState {
   gameState: IGameState;
 }
 
-const defaultGameCounters: IGameCounters = {
+export const defaultGameCounters: IGameCounters = {
   time: 0,
   moves: 0,
   score: 0,

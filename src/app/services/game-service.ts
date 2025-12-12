@@ -59,15 +59,19 @@ export class GameService {
   }
 
   private createNewCells(): void {
-    this.cells = Array(50)
-      .fill(0)
-      .map(() => Array(9).fill(0));
-    this.store.setNextIndex(0);
+    this.cells = [];
+    for (let i = 0; i < 50; i++) {
+      const line: number[] = [];
+      for (let j = 0; j < 9; j++) {
+        line.push(0);
+      }
+      this.cells.push(line);
+    }
   }
 
   private createFirstCells(): void {
     let numbers = [];
-    if (this.store.gameState.mode() === 'chaotic') {
+    if (this.store.gameState.mode() === Modes.CHAOTIC) {
       for (let i = 0; i < 27; i++) {
         numbers.push(Math.floor(9 * Math.random()) + 1);
       }
@@ -78,7 +82,7 @@ export class GameService {
         .filter((s) => s !== 10)
         .join('')
         .split('');
-      if (this.store.gameState.mode() === 'random') {
+      if (this.store.gameState.mode() === Modes.RANDOM) {
         numbers.sort(() => Math.random() - 0.5);
       }
     }
@@ -251,10 +255,10 @@ export class GameService {
     // globalStore.burger.close();
     this.endEraserMode();
     let numbers = this.cells.flat().filter((s) => s);
-    if (this.store.gameState.mode() === 'random') {
+    if (this.store.gameState.mode() === Modes.RANDOM) {
       numbers.sort(() => Math.random() - 0.5);
     }
-    if (this.store.gameState.mode() === 'chaotic') {
+    if (this.store.gameState.mode() === Modes.CHAOTIC) {
       numbers = numbers.map(() => Math.floor(9 * Math.random()) + 1);
     }
 

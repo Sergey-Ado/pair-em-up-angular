@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '../../store/store';
-import { StorageKeys } from '../types/constants';
+import { IGameCounters, Store } from '../../store/store';
+import { Modes, StorageKeys } from '../types/constants';
+import {
+  defaultStorageGameData,
+  StorageGameData,
+} from '../types/storage-types';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +35,60 @@ export class StorageService {
     const json = JSON.stringify(data);
 
     localStorage.setItem(StorageKeys.GAME, json);
+  }
+
+  public loadGame(): StorageGameData {
+    const json = localStorage.getItem(StorageKeys.GAME);
+    if (!json) return defaultStorageGameData;
+
+    const dataFromJSON: unknown = JSON.parse(json);
+    if (typeof dataFromJSON === 'object' && dataFromJSON) {
+      const tempObject: Partial<StorageGameData> = dataFromJSON;
+      if (
+        typeof tempObject.mode === 'string' &&
+        typeof tempObject.nextIndex === 'number' &&
+        typeof tempObject.counters &&
+        tempObject.counters &&
+        Array.isArray(tempObject.cells)
+      ) {
+        const mode: Modes = tempObject.mode;
+        const nextIndex = tempObject.nextIndex;
+        const tempCounters: Partial<IGameCounters> = tempObject.counters;
+        const cells = tempObject.cells;
+        const counters = this.parseCounters(tempCounters);
+        if (counters) {
+          return { mode, nextIndex, cells, counters };
+        }
+      }
+    }
+
+    return defaultStorageGameData;
+  }
+
+  private parseCounters(
+    tempCounters: Partial<IGameCounters>,
+  ): IGameCounters | null {
+    if (
+      typeof tempCounters.time === 'number' &&
+      typeof tempCounters.moves === 'number' &&
+      typeof tempCounters.score === 'number' &&
+      typeof tempCounters.hints === 'number' &&
+      typeof tempCounters.reverts === 'number' &&
+      typeof tempCounters.adds === 'number' &&
+      typeof tempCounters.shuffles === 'number' &&
+      typeof tempCounters.erasers === 'number'
+    ) {
+      return {
+        time: tempCounters.time,
+        moves: tempCounters.moves,
+        score: tempCounters.score,
+        hints: tempCounters.hints,
+        reverts: tempCounters.reverts,
+        adds: tempCounters.adds,
+        shuffles: tempCounters.shuffles,
+        erasers: tempCounters.erasers,
+      };
+    }
+    return null;
   }
 }
