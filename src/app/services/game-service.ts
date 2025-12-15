@@ -475,8 +475,7 @@ export class GameService {
     this.stopTimer();
     this.store.setGameOverCode(code);
     this.store.setShowResults(true);
-    // globalStore.gamePage.modal.show(code, this.score, time);
-    // storageStore.saveHighScores(this.mode, this.score, !code, time, this.moves);
+    this.storageService.saveHighScores();
     this.store.setPlay(false);
     // globalStore.sound.stopBackground();
     if (code === GameOverCode.WIN) {

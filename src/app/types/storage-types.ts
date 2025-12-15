@@ -18,3 +18,11 @@ export const defaultStorageGameData: StorageGameData = {
   ],
   nextIndex: 0,
 };
+
+export interface StorageHighScoreData {
+  mode: string;
+  score: number;
+  win: boolean;
+  time: number;
+  moves: number;
+}

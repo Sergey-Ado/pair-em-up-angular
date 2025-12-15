@@ -4,6 +4,7 @@ import { Modes, StorageKeys } from '../types/constants';
 import {
   defaultStorageGameData,
   StorageGameData,
+  StorageHighScoreData,
 } from '../types/storage-types';
 
 @Injectable({
@@ -11,6 +12,24 @@ import {
 })
 export class StorageService {
   private store = inject(Store);
+
+  public saveHighScores(): void {
+    // const highScores = this.loadHighScores();
+    const highScores = [];
+
+    const newHighScore: StorageHighScoreData = {
+      mode: this.store.gameState.mode(),
+      score: this.store.gameCounters.score(),
+      win: !this.store.gameOverCode(),
+      time: this.store.gameCounters.time(),
+      moves: this.store.gameCounters.moves(),
+    };
+    highScores.push(newHighScore);
+    highScores.sort((a, b) => a.time - b.time);
+    if (highScores.length > 5) highScores.pop();
+    const json = JSON.stringify(highScores);
+    localStorage.setItem(StorageKeys.HIGH_SCORES, json);
+  }
 
   public saveGame(): void {
     if (!this.store.gameState.play()) return;
