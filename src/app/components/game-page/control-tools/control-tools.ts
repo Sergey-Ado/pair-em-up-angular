@@ -20,4 +20,8 @@ export class ControlTools {
   protected save(): void {
     this.storageService.saveGame();
   }
+
+  protected load(): void {
+    this.gameService.loadGame();
+  }
 }

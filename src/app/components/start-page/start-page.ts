@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { Constants } from '../../types/constants';
+import { Component, inject } from '@angular/core';
+import { Constants, Pages } from '../../types/constants';
 import { ModeSelection } from './mode-selection/mode-selection';
+import { Store } from '../../store/store';
+import { GameService } from '../../services/game-service';
 
 @Component({
   selector: 'app-start-page',
@@ -10,4 +12,11 @@ import { ModeSelection } from './mode-selection/mode-selection';
 })
 export class StartPage {
   protected github = Constants.GITHUB;
+  protected store = inject(Store);
+  protected gameService = inject(GameService);
+
+  protected load(): void {
+    this.store.setPageIndex(Pages.GAME);
+    this.gameService.loadGame();
+  }
 }

@@ -14,7 +14,7 @@ export class StorageService {
 
   public saveGame(): void {
     if (!this.store.gameState.play()) return;
-    const counters = {
+    const counters: IGameCounters = {
       score: this.store.gameCounters.score(),
       time: this.store.gameCounters.time(),
       moves: this.store.gameCounters.moves(),
@@ -23,13 +23,13 @@ export class StorageService {
       adds: this.store.gameCounters.adds(),
       shuffles: this.store.gameCounters.shuffles(),
       erasers: this.store.gameCounters.erasers(),
-      nextIndex: this.store.gameState.nextIndex(),
     };
 
-    const data = {
+    const data: StorageGameData = {
       mode: this.store.gameState.mode(),
       counters,
       cells: this.store.gameState.cells(),
+      nextIndex: this.store.gameState.nextIndex(),
     };
 
     const json = JSON.stringify(data);
@@ -37,13 +37,14 @@ export class StorageService {
     localStorage.setItem(StorageKeys.GAME, json);
   }
 
-  private loadGame(): StorageGameData {
+  public loadGame(): number[][] {
     const json = localStorage.getItem(StorageKeys.GAME);
-    if (!json) return defaultStorageGameData;
+    if (!json) return this.setLoadGame(defaultStorageGameData);
 
     const dataFromJSON: unknown = JSON.parse(json);
     if (typeof dataFromJSON === 'object' && dataFromJSON) {
       const tempObject: Partial<StorageGameData> = dataFromJSON;
+
       if (
         typeof tempObject.mode === 'string' &&
         typeof tempObject.nextIndex === 'number' &&
@@ -57,12 +58,12 @@ export class StorageService {
         const cells = tempObject.cells;
         const counters = this.parseCounters(tempCounters);
         if (counters) {
-          return { mode, nextIndex, cells, counters };
+          return this.setLoadGame({ mode, nextIndex, cells, counters });
         }
       }
     }
 
-    return defaultStorageGameData;
+    return this.setLoadGame(defaultStorageGameData);
   }
 
   private parseCounters(
@@ -92,7 +93,7 @@ export class StorageService {
     return null;
   }
 
-  public setLoadGame(data: StorageGameData): number[][] {
+  private setLoadGame(data: StorageGameData): number[][] {
     this.store.setMode(data.mode);
     this.store.setNextIndex(data.nextIndex);
     this.store.setCells(data.cells);

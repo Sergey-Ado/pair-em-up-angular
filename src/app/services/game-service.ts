@@ -3,6 +3,7 @@ import { Constants, GameOverCode, Modes } from '../types/constants';
 import { Store } from '../store/store';
 import { ICell, IHintPair, TSelectCell } from '../types/game-types';
 import { SoundService } from './sound-service';
+import { StorageService } from './storage-service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ import { SoundService } from './sound-service';
 export class GameService {
   private readonly store = inject(Store);
   private readonly soundService = inject(SoundService);
+  private readonly storageService = inject(StorageService);
 
   private timerIncrement = 0;
   private cells: number[][] = [[0]];
@@ -50,6 +52,23 @@ export class GameService {
     this.store.setPlay(true);
     // globalStore.sound.startBackground();
     this.soundService.start();
+  }
+
+  public loadGame(): void {
+    this.createNewCells();
+    const newCells = this.storageService.loadGame();
+    for (let row = 0; row < newCells.length; row++) {
+      if (Array.isArray(newCells[row])) {
+        for (let col = 0; col < newCells[row].length; col++) {
+          this.cells[row][col] = newCells[row][col];
+        }
+      }
+    }
+
+    this.calculateHints();
+    this.store.setPlay(true);
+    this.soundService.start();
+    // globalStore.sound.startBackground();
   }
 
   private updateStoreCells(): void {
