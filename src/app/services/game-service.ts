@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Constants, GameOverCode, Modes } from '../types/constants';
-import { Store } from '../../store/store';
+import { Store } from '../store/store';
 import { ICell, IHintPair, TSelectCell } from '../types/game-types';
 import { SoundService } from './sound-service';
 

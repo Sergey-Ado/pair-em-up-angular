@@ -4,7 +4,7 @@ import {
   GameOverMessage,
   Pages,
   Modes,
-} from '../app/types/constants';
+} from '../types/constants';
 import {
   patchState,
   signalStore,
@@ -12,7 +12,7 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { IHintPair, TSelectCell } from '../app/types/game-types';
+import { IHintPair, TSelectCell } from '../types/game-types';
 import { computed } from '@angular/core';
 
 export interface IGameCounters {

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { GameCell } from './game-cell/game-cell';
-import { Store } from '../../../../store/store';
+import { Store } from '../../../store/store';
 import { BorderCell } from './border-cell/border-cell';
 
 @Component({

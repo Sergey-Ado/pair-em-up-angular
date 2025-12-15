@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { GameService } from '../../../services/game-service';
-import { Store } from '../../../../store/store';
+import { Store } from '../../../store/store';
 
 @Component({
   selector: 'app-mode-info',

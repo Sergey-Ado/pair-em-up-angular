@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '../../store/store';
+import { Store } from '../store/store';
 import { EffectPaths } from '../types/constants';
 
 @Injectable({

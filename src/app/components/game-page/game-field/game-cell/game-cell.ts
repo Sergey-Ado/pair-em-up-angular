@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, OnChanges } from '@angular/core';
-import { Store } from '../../../../../store/store';
+import { Store } from '../../../../store/store';
 import { NgClass } from '@angular/common';
 import { GameService } from '../../../../services/game-service';
 import { ICell } from '../../../../types/game-types';

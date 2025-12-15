@@ -1,4 +1,4 @@
-import { defaultGameCounters, IGameCounters } from '../../store/store';
+import { defaultGameCounters, IGameCounters } from '../store/store';
 import { Modes } from './constants';
 
 export interface StorageGameData {

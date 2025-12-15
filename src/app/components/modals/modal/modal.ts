@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '../../../../store/store';
+import { Store } from '../../../store/store';
 
 @Component({
   selector: 'app-modal',

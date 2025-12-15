@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { IGameCounters, Store } from '../../store/store';
+import { IGameCounters, Store } from '../store/store';
 import { Modes, StorageKeys } from '../types/constants';
 import {
   defaultStorageGameData,
