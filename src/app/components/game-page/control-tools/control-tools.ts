@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { GameService } from '../../../services/game-service';
 import { StorageService } from '../../../services/storage-service';
+import { Store } from '../../../store/store';
 
 @Component({
   selector: 'app-control-tools',
@@ -11,6 +12,7 @@ import { StorageService } from '../../../services/storage-service';
 export class ControlTools {
   private gameService = inject(GameService);
   private storageService = inject(StorageService);
+  protected store = inject(Store);
 
   protected reset(): void {
     this.gameService.newGame();
@@ -19,6 +21,7 @@ export class ControlTools {
 
   protected save(): void {
     this.storageService.saveGame();
+    this.store.setCanLoadGame(true);
   }
 
   protected load(): void {

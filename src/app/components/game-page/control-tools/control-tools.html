@@ -2,6 +2,11 @@
   reset game
 </button>
 <button type="button" class="control-button" (click)="save()">save game</button>
-<button type="button" class="control-button" (click)="load()">
+<button
+  type="button"
+  class="control-button"
+  (click)="load()"
+  [disabled]="!this.store.canLoadGame()"
+>
   continue game
 </button>

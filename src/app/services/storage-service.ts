@@ -109,4 +109,9 @@ export class StorageService {
 
     return data.cells;
   }
+
+  public hasGame(): boolean {
+    const result = Boolean(localStorage.getItem(StorageKeys.GAME));
+    return result;
+  }
 }

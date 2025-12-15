@@ -45,6 +45,7 @@ interface IState {
   gameOverCode: GameOverCode;
   gameCounters: IGameCounters;
   gameState: IGameState;
+  canLoadGame: boolean;
 }
 
 export const defaultGameCounters: IGameCounters = {
@@ -77,6 +78,7 @@ const initialState: IState = {
   gameOverCode: GameOverCode.WIN,
   gameCounters: defaultGameCounters,
   gameState: defaultGameState,
+  canLoadGame: false,
 };
 
 export const Store = signalStore(
@@ -204,6 +206,9 @@ export const Store = signalStore(
         gameCounters: defaultGameCounters,
         gameState: { ...state.gameState, firstCell: null, eraserMode: false },
       }));
+    },
+    setCanLoadGame(canLoadGame: boolean): void {
+      patchState(store, { canLoadGame });
     },
   })),
 );
