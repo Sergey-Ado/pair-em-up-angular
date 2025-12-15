@@ -20,7 +20,7 @@ export const defaultStorageGameData: StorageGameData = {
 };
 
 export interface StorageHighScoreData {
-  mode: string;
+  mode: Modes;
   score: number;
   win: boolean;
   time: number;

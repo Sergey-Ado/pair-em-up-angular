@@ -377,7 +377,6 @@ export class GameService {
       this.updateStoreCells();
 
       const delta = this.pairCellValue(this.oldFirstCell, this.oldSecondCell);
-      console.log(delta, this.oldFirstCell, this.oldSecondCell);
       this.store.setScore(this.store.gameCounters.score() - delta);
       this.store.setReverts(0);
       this.store.setMoves(this.store.gameCounters.moves() - 1);
