@@ -265,6 +265,7 @@ export class GameService {
       if (!(firstCell && secondCell)) return;
       this.store.setFirstCell(null);
       this.store.setErrorCell(null);
+      this.store.setSecondCell(null);
       clearTimeout(errorDelay);
       this.canClick = true;
     }, Constants.REMOVE_DELAY);
