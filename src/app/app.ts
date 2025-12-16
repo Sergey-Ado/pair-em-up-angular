@@ -6,11 +6,12 @@ import { GamePage } from './components/game-page/game-page';
 import { Modal } from './components/modals/modal/modal';
 import { ResultsModal } from './components/modals/results-modal/results-modal';
 import { StorageService } from './services/storage-service';
+import { HighScoresPage } from './components/high-scores-page/high-scores-page';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
-  imports: [StartPage, Header, GamePage, Modal, ResultsModal],
+  imports: [StartPage, Header, GamePage, Modal, ResultsModal, HighScoresPage],
   styleUrl: './app.css',
 })
 export class App {

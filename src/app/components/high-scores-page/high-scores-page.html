@@ -1,0 +1,19 @@
+<div class="high-scores-page">
+  <div class="container">
+    @for (item of columnNames; track $index) {
+      <div class="title-name">{{ item }}</div>
+    }
+    @if (highScores.length === 0) {
+      <div class="no-line">No save high scores</div>
+    }
+    @for (item of highScores; track $index) {
+      <div class="cell">{{ item.mode }}</div>
+      <div class="cell">{{ item.score }}</div>
+      <div class="cell">
+        <img [src]="item.win ? winLoss.WIN : winLoss.LOSS" alt="win/loss" />
+      </div>
+      <div class="cell">{{ item.time }}</div>
+      <div class="cell">{{ item.moves }}</div>
+    }
+  </div>
+</div>

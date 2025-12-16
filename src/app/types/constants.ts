@@ -27,6 +27,11 @@ export enum EffectPaths {
   LOSS = '/audio/effects/effect-loss.mp3',
 }
 
+export enum winLossImages {
+  WIN = '/icons/tick.png',
+  LOSS = '/icons/cross.png',
+}
+
 export enum GameOverCode {
   WIN,
   NO_MOVE,
