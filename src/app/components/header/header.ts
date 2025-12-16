@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Burger } from './burger/burger';
+import { Store } from '../../store/store';
+import { Pages } from '../../types/constants';
 
 @Component({
   selector: 'app-header',
@@ -7,4 +9,10 @@ import { Burger } from './burger/burger';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {}
+export class Header {
+  private store = inject(Store);
+
+  protected showHighScore(): void {
+    this.store.setPageIndex(Pages.HIGH_SCORE);
+  }
+}

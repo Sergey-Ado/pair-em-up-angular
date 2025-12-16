@@ -4,6 +4,7 @@ import { Modes, StorageKeys } from '../types/constants';
 import {
   defaultStorageGameData,
   StorageGameData,
+  StorageHighScoreData,
 } from '../types/storage-types';
 
 @Injectable({
@@ -11,6 +12,61 @@ import {
 })
 export class StorageService {
   private store = inject(Store);
+
+  public loadHighScores(): StorageHighScoreData[] {
+    const json = localStorage.getItem(StorageKeys.HIGH_SCORES);
+    if (!json) return [];
+    const dataFromJSON: unknown = JSON.parse(json);
+    if (dataFromJSON && Array.isArray(dataFromJSON)) {
+      const array: unknown[] = dataFromJSON;
+      const result: StorageHighScoreData[] = [];
+      array.forEach((item) => {
+        const obj = this.parseHighScore(item);
+        if (obj) result.push(obj);
+      });
+      return result;
+    }
+    return [];
+  }
+
+  private parseHighScore(data: unknown): StorageHighScoreData | null {
+    if (typeof data === 'object' && data) {
+      const s: Partial<StorageHighScoreData> = data;
+      if (
+        typeof s.mode === 'string' &&
+        typeof s.score === 'number' &&
+        typeof s.win === 'boolean' &&
+        typeof s.time === 'number' &&
+        typeof s.moves === 'number'
+      ) {
+        return {
+          mode: s.mode,
+          score: s.score,
+          win: s.win,
+          time: s.time,
+          moves: s.moves,
+        };
+      }
+    }
+    return null;
+  }
+
+  public saveHighScores(): void {
+    const highScores = this.loadHighScores();
+
+    const newHighScore: StorageHighScoreData = {
+      mode: this.store.gameState.mode(),
+      score: this.store.gameCounters.score(),
+      win: !this.store.gameOverCode(),
+      time: this.store.gameCounters.time(),
+      moves: this.store.gameCounters.moves(),
+    };
+    highScores.push(newHighScore);
+    highScores.sort((a, b) => a.time - b.time);
+    if (highScores.length > 5) highScores.pop();
+    const json = JSON.stringify(highScores);
+    localStorage.setItem(StorageKeys.HIGH_SCORES, json);
+  }
 
   public saveGame(): void {
     if (!this.store.gameState.play()) return;

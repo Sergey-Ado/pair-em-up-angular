@@ -23,4 +23,9 @@ export class ResultsModal {
     this.store.setShowResults(false);
     this.store.setPageIndex(Pages.START);
   }
+
+  protected showHighScore(): void {
+    this.store.setShowResults(false);
+    this.store.setPageIndex(Pages.HIGH_SCORE);
+  }
 }
